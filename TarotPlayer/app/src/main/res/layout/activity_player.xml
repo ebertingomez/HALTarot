@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFA111"
+    tools:context="fr.telecom_paristech.pact42.tarot.tarotplayer.Activities.PlayerActivity">
+
+    <ImageView
+        android:id="@+id/table"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/table"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.394" />
+
+    <ImageView
+        android:id="@+id/playerGo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:src="@drawable/go_icon"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/table"
+        app:layout_constraintEnd_toEndOf="@+id/table"
+        app:layout_constraintStart_toStartOf="@+id/table"
+        app:layout_constraintTop_toTopOf="@+id/table" />
+
+    <ImageView
+        android:id="@+id/player2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="28dp"
+        android:clickable="true"
+        android:src="@drawable/image_player_avatar"
+        app:layout_constraintBottom_toTopOf="@+id/playerGo"
+        app:layout_constraintEnd_toEndOf="@+id/playerGo"
+        app:layout_constraintStart_toStartOf="@+id/playerGo" />
+
+    <EditText
+        android:id="@+id/player2Name"
+        android:layout_width="105dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:background="#63D00C"
+        android:gravity="center"
+        android:hint="Player 2"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/player2"
+        app:layout_constraintStart_toStartOf="@+id/player2"
+        app:layout_constraintTop_toBottomOf="@+id/player2" />
+
+    <ImageView
+        android:id="@+id/player1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
+        android:clickable="true"
+        android:src="@drawable/image_player_avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/playerGo"
+        app:layout_constraintStart_toEndOf="@+id/playerGo"
+        app:layout_constraintTop_toTopOf="@+id/playerGo"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/player1Name"
+        android:layout_width="105dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:background="#63D00C"
+        android:gravity="center"
+        android:hint="Player 1"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/player1"
+        app:layout_constraintStart_toStartOf="@+id/player1"
+        app:layout_constraintTop_toBottomOf="@+id/player1" />
+
+    <ImageView
+        android:id="@+id/player3"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
+        android:clickable="true"
+        android:src="@drawable/image_player_avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/playerGo"
+        app:layout_constraintEnd_toStartOf="@+id/playerGo"
+        app:layout_constraintTop_toTopOf="@+id/playerGo"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/player3Name"
+        android:layout_width="105dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:background="#63D00C"
+        android:gravity="center"
+        android:hint="Player 3"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/player3"
+        app:layout_constraintStart_toStartOf="@+id/player3"
+        app:layout_constraintTop_toBottomOf="@+id/player3" />
+
+    <ImageView
+        android:id="@+id/player4"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:clickable="false"
+        android:src="@drawable/image_player_avatar"
+        app:layout_constraintEnd_toEndOf="@+id/playerGo"
+        app:layout_constraintStart_toStartOf="@+id/playerGo"
+        app:layout_constraintTop_toBottomOf="@+id/playerGo" />
+
+    <TextView
+        android:id="@+id/player4Name"
+        android:layout_width="105dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginTop="0dp"
+        android:background="#63D00C"
+        android:gravity="center"
+        android:text="AI"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/player4"
+        app:layout_constraintStart_toStartOf="@+id/player4"
+        app:layout_constraintTop_toBottomOf="@+id/player4" />
+
+</android.support.constraint.ConstraintLayout>

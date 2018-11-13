@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFA111"
+    tools:context="fr.telecom_paristech.pact42.tarot.tarotplayer.Activities.EnchereActivity">
+
+    <ImageView
+        android:id="@+id/table"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/table"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.394" />
+
+    <ImageView
+        android:id="@+id/enchereGo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:src="@drawable/go_icon"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/table"
+        app:layout_constraintEnd_toEndOf="@+id/table"
+        app:layout_constraintStart_toStartOf="@+id/table"
+        app:layout_constraintTop_toTopOf="@+id/table" />
+
+    <ImageView
+        android:id="@+id/enchere2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="28dp"
+        android:clickable="true"
+        android:src="@drawable/image_player_avatar"
+        app:layout_constraintBottom_toTopOf="@+id/enchereGo"
+        app:layout_constraintEnd_toEndOf="@+id/enchereGo"
+        app:layout_constraintStart_toStartOf="@+id/enchereGo" />
+
+    <TextView
+        android:id="@+id/enchere2Name"
+        android:layout_width="105dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:background="#63D00C"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/enchere2"
+        app:layout_constraintStart_toStartOf="@+id/enchere2"
+        app:layout_constraintTop_toBottomOf="@+id/enchere2" />
+
+    <ImageView
+        android:id="@+id/enchere1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
+        android:clickable="true"
+        android:src="@drawable/image_player_avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/enchereGo"
+        app:layout_constraintStart_toEndOf="@+id/enchereGo"
+        app:layout_constraintTop_toTopOf="@+id/enchereGo"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/enchere1Name"
+        android:layout_width="105dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:background="#63D00C"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/enchere1"
+        app:layout_constraintStart_toStartOf="@+id/enchere1"
+        app:layout_constraintTop_toBottomOf="@+id/enchere1" />
+
+    <ImageView
+        android:id="@+id/enchere3"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
+        android:clickable="true"
+        android:src="@drawable/image_player_avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/enchereGo"
+        app:layout_constraintEnd_toStartOf="@+id/enchereGo"
+        app:layout_constraintTop_toTopOf="@+id/enchereGo"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/enchere3Name"
+        android:layout_width="105dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:background="#63D00C"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/enchere3"
+        app:layout_constraintStart_toStartOf="@+id/enchere3"
+        app:layout_constraintTop_toBottomOf="@+id/enchere3" />
+
+    <ImageView
+        android:id="@+id/enchere4"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:clickable="false"
+        android:tag=""
+        android:src="@drawable/image_player_avatar"
+        app:layout_constraintEnd_toEndOf="@+id/enchereGo"
+        app:layout_constraintStart_toStartOf="@+id/enchereGo"
+        app:layout_constraintTop_toBottomOf="@+id/enchereGo" />
+
+    <TextView
+        android:id="@+id/enchere4Name"
+        android:layout_width="105dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginTop="0dp"
+        android:background="#63D00C"
+        android:gravity="center"
+        android:text="AI"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/enchere4"
+        app:layout_constraintStart_toStartOf="@+id/enchere4"
+        app:layout_constraintTop_toBottomOf="@+id/enchere4" />
+
+</android.support.constraint.ConstraintLayout>

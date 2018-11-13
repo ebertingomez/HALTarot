@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Tarot Player</string>
+    <string name="action_settings">Settings</string>
+    <string name="mainTitle">AceTarot</string>
+    <string name="mainButtonPlay">PLAY!</string>
+    <string name="version">version 1.0</string>
+    <string name="difficultyTitle">AI MODE:</string>
+    <string name="difficulty1">EASY</string>
+    <string name="difficulty2">NORMAL</string>
+    <string name="difficulty3">HARD</string>
+    <string name="scanHand">Scan each card and wait for validation</string>
+    <string name="successfulScan">Sucessful Scan</string>
+    <string name="popupEncheresTitle">Encheres</string>
+    <string name="enchereText1">Chelem</string>
+    <string name="enchereText2">Contre le Chien</string>
+    <string name="enchereText3">Sans le Chien</string>
+    <string name="enchereText4">Garde</string>
+    <string name="enchereText5">Petite</string>
+    <string name="enchereText6">Passe</string>
+</resources>
