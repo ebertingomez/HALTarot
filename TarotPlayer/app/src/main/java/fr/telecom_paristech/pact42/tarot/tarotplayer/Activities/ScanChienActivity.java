@@ -1,151 +1,131 @@
+/*
+ * Copyright (c) 2018. - Groupe 1PACT 42 - Projet HALTarot
+ */
+
 package fr.telecom_paristech.pact42.tarot.tarotplayer.Activities;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.ImageFormat;
-import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.SurfaceHolder;
+import android.widget.TableLayout;
+import android.widget.TextView;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-
+import fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.CardAcquisition;
+import fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.EnchereLibrary;
+import fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TarotGame;
+import fr.telecom_paristech.pact42.tarot.tarotplayer.Divers.PhotoDegueuException;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.R;
-
+/**
+ *  This activity is used to take a picture of each chien card, analyze it and store it in the current game object.
+ *  @version 1.0
+ *  @see ChangeChienCardActivity
+ *  @see PlayerIddleActivity
+ */
 public class ScanChienActivity extends AppCompatActivity {
-    private static int cardsScanned = 0;
-    private String cardList="";
-    private android.hardware.Camera camera = null;
-    private SurfaceHolder mHolder=null;
-
+    /**
+     * Number of scanned cards
+     */
+    public static int cardsScanned;
+    /**
+     *  This is the current game. It constains all the information about the cards, the players,etc.
+     *  @see #onCreate(Bundle)
+     *  @see TarotGame
+     */
+    private TarotGame currentGame;
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_hand);
+        currentGame = getIntent()
+                .getParcelableExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME");
     }
-
+    /**
+     * This method is used to take a picture of a card, order its acquisition and
+     * update the visualisation of this activity. It decides whether to keep taking pictures or to continue with
+     * the flow of the application.
+     *  @see AppCompatActivity#onResume()
+     *  @see TarotGame#printChienCards(TableLayout, Context)
+     *  @see PlayerIddleActivity
+     *  @see ChangeChienCardActivity
+     *  @see EnchereLibrary#enchereTableValue
+     *  @see CardAcquisition
+     */
     @Override
     protected void onResume() {
         super.onResume();
+        cardsScanned = currentGame.getChienList().size();
+        TableLayout cardsArray = findViewById(R.id.cardsArrayHand);
+        currentGame.printChienCards(cardsArray, this);
 
-        if ( cardsScanned < 7){
+        TextView cardNumber = findViewById(R.id.scannedCards);
+        cardNumber.setText(String.valueOf(cardsScanned));
+        if (cardsScanned < 6) {
+            android.hardware.Camera camera = CardAcquisition.openFrontalCamera();
+            CardAcquisition.takePicture(camera);
             Handler handler = new Handler();
             handler.postDelayed(new Thread(new Runnable() {
                 public void run() {
                     cardAcquisition();
                 }
             }), 1000);
-        }
-        else{
-            addCardsToFile(cardList);
-            Intent scanHandActivity = new Intent(ScanChienActivity.this, EnchereActivity.class);
-            startActivity(scanHandActivity);
+        } else {
+            int myEncherevalue = EnchereLibrary.enchereTableValue.get(EnchereActivity.myEnchere);
+            int player1Encherevalue = EnchereLibrary.enchereTableValue.get(EnchereActivity.player1Enchere);
+            int player2Encherevalue = EnchereLibrary.enchereTableValue.get(EnchereActivity.player2Enchere);
+            int player3Encherevalue = EnchereLibrary.enchereTableValue.get(EnchereActivity.player3Enchere);
+
+            cardsScanned = 0;
+
+            if ((EnchereActivity.myEnchere.equals("PE")
+                    || EnchereActivity.myEnchere.equals("GA") && (myEncherevalue > player1Encherevalue
+                            && myEncherevalue > player2Encherevalue && myEncherevalue > player3Encherevalue))) {
+
+                Intent changeChienCardActivity = new Intent(ScanChienActivity.this, ChangeChienCardActivity.class);
+                changeChienCardActivity.putExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME",
+                        currentGame);
+                startActivity(changeChienCardActivity);
+            } else {
+                Intent playerIddleActivity = new Intent(ScanChienActivity.this, PlayerIddleActivity.class);
+                playerIddleActivity.putExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME",
+                        currentGame);
+                startActivity(playerIddleActivity);
+            }
         }
     }
 
+    /**
+     * Called when a picture was taken to analyze it using the image recognition library. It tells if the
+     * recognition was correct.
+     * @see SuccessfulScanActivity
+     * @see UnsuccessfulScanChienActivity
+     * @see PhotoDegueuException
+     * @see CardAcquisition#cardRecognitionChien()
+     */
     private void cardAcquisition() {
         String response = null;
-        android.hardware.Camera camera = openFrontalCamera();
-        do {
-            String path = takePicture(camera);
-            response = analyse(path);
-        }
-        while (response.equals("error"));
-
-        if(cardsScanned == 0){cardList = cardList + response;}
-        else cardList = cardList+"\n"+response;
-        cardsScanned++;
-        camera.release();
-        Intent successfulScanActivity = new Intent(ScanChienActivity.this, SuccessfulScanActivity.class);
-        startActivity(successfulScanActivity);
-    }
-
-    private void addCardsToFile(String text) {
-        String name = "chien.txt";
-        //File file = new File(getCacheDir()+name);
-        File file=null;
-        PrintWriter pw=null;
+        boolean error;
         try {
-            file = new File(MainActivity.path,name);
-            pw = new PrintWriter(new FileOutputStream(file));
-
-            if (cardsScanned != 0) {pw.println();}
-            pw.print(text);
-        }
-        catch (Exception e) {
-            Log.e("WritingFile", "The file could not be written: " + e.getLocalizedMessage());
-            Log.d("WritingFile", file.getAbsolutePath());}
-        finally {
-            try {pw.close();}
-            catch (Exception e) {}
-        }
-    }
-
-    private String analyse(String path) {
-        try { Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
-        return "Good";
-    }
-
-    private String takePicture(android.hardware.Camera camera) {
-        SurfaceTexture surfaceTexture = new SurfaceTexture(10);
-        try {
-            camera.setPreviewTexture(surfaceTexture);
-        } catch (IOException e) {
+            response = CardAcquisition.cardRecognitionChien();
+            error = false;
+        } catch (PhotoDegueuException e) {
             e.printStackTrace();
+            error = true;
         }
-
-        android.hardware.Camera.Parameters params = camera.getParameters();
-        params.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-        //params.setAutoWhiteBalanceLock(false);
-        //params.setRecordingHint(true);
-        params.setPictureSize(1028,768);
-        params.setPictureFormat(ImageFormat.JPEG);
-        //camera.setParameters(params);
-
-        String path = null;
-
-        android.hardware.Camera.PictureCallback pngCallback = new android.hardware.Camera.PictureCallback() {
-            public void onPictureTaken(byte[] data, android.hardware.Camera camera) {
-                BufferedOutputStream bo = null;
-                try {
-                    String path = MainActivity.path + "/photo"+(cardsScanned)+".jpeg";
-                    bo = new BufferedOutputStream( new FileOutputStream(path));
-                    bo.write(data);
-                } catch (Exception e) {
-                    Log.e("TakePic", "Camera failed to take Picture: " + e.getMessage());
-                } finally {
-                    try { bo.close();} catch (Exception e) {}
-                }
-            }
-        };
-        try{
-            camera.startPreview();
-            camera.takePicture(null, null, pngCallback);}
-        catch (Exception e){Log.e("TakePic2", "Camera failed to take Picture: " + e.getMessage());
-        e.printStackTrace();}
-
-        return path;
-    }
-    private android.hardware.Camera openFrontalCamera() {
-        int cameraCount = 0;
-        android.hardware.Camera cam = null;
-        android.hardware.Camera.CameraInfo cameraInfo = new android.hardware.Camera.CameraInfo();
-        cameraCount = android.hardware.Camera.getNumberOfCameras();
-        for (int camIdx = 0; camIdx<cameraCount; camIdx++) {
-            android.hardware.Camera.getCameraInfo(camIdx, cameraInfo);
-            if (cameraInfo.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                try {
-                    cam = android.hardware.Camera.open(camIdx);
-                } catch (RuntimeException e) {
-                    Log.e("FrontalCamera", "Camera failed to open: " + e.getLocalizedMessage());
-                }
-            }
+        if (error) {
+            Intent unsuccessfulScanChienActivity = new Intent(ScanChienActivity.this,
+                    UnsuccessfulScanChienActivity.class);
+            unsuccessfulScanChienActivity.putExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME",
+                    currentGame);
+            startActivity(unsuccessfulScanChienActivity);
+        } else {
+            currentGame.addChienCard(response);
+            Intent successfulScanActivity = new Intent(ScanChienActivity.this, SuccessfulScanActivity.class);
+            startActivity(successfulScanActivity);
         }
-        return cam;
     }
 }

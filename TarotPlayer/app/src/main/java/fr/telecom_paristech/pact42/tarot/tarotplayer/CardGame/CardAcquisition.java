@@ -1,53 +1,81 @@
+/*
+ * Copyright (c) 2018. - Groupe 1PACT 42 - Projet HALTarot
+ */
+
 package fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame;
 
-import android.content.Intent;
-import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.util.Log;
-import android.view.SurfaceHolder;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import fr.telecom_paristech.pact42.tarot.tarotplayer.Activities.MainActivity;
-import fr.telecom_paristech.pact42.tarot.tarotplayer.Activities.ScanHandActivity;
-import fr.telecom_paristech.pact42.tarot.tarotplayer.Activities.SuccessfulScanActivity;
-
+import fr.telecom_paristech.pact42.tarot.tarotplayer.Divers.PhotoDegueuException;
+/**
+ *  This class is used to do all the card acquisition process. So it takes a picture and analyzes it.
+ *  @version 1.0
+ *  @see PhotoDegueuException
+ *  @see android.hardware.Camera
+ */
 public class CardAcquisition {
-    private android.hardware.Camera camera = null;
-    private SurfaceHolder mHolder=null;
+    /**
+     * Number of pictures analyzed by the application
+     */
+    private static int cmpt = 0;
 
-    static {
-        System.loadLibrary("native-lib");
-    }
-
-    public static String cardRecognition() {
-        String response = null;
-        android.hardware.Camera camera = openFrontalCamera();
-        do {
-            String path = takePicture(camera);
-            response = analyse(path);
-        }
-        while (response.equals("error"));
-        camera.release();
-        return response;
-
-    }
-
-    private static String analyse(String path) {
-
-        return analyzeFromJNI(path);
+    /**
+     *  This method is used to analyze a picture taken by the application. The picture has to be the one of a hand card
+     * @return
+     *      The value of the card
+     * @throws PhotoDegueuException
+     *      When the image recognition library could not get the card.
+     * @see TarotCardLibrary#cards
+     */
+    public static String cardRecognitionHand() throws PhotoDegueuException {
+        String res = "!!";
+        String path = MainActivity.MAIN_PATH + "/photo.jpeg";
+        res = analyse(path);
+        res = res.toUpperCase();
+        if (!TarotCardLibrary.cards.contains(res))
+            throw new PhotoDegueuException();
+        else
+            return res;
     }
     /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
+     *  This method is used to analyze a picture taken by the application. The picture has to be the one of a chien card
+     * @return
+     *      The value of the card
+     * @throws PhotoDegueuException
+     *      When the image recognition library could not get the card.
+     * @see TarotCardLibrary#cards
      */
-    public native static String analyzeFromJNI(String path);
+    public static String cardRecognitionChien() throws PhotoDegueuException {
+        return CardAcquisition.cardRecognitionHand();
+    }
+    /**
+     *  This method is used to analyze a picture taken by the application. The picture has to be the one of a table card
+     * @return
+     *      The value of the card
+     * @throws PhotoDegueuException
+     *      When the image recognition library could not get the card.
+     * @see TarotCardLibrary#cards
+     */
+    public static String cardRecognitionTable() throws PhotoDegueuException {
+        return CardAcquisition.cardRecognitionHand();
+    }
 
-    private static String takePicture(android.hardware.Camera camera) {
+    /**
+     * This method is used to take a picture and store it in a predefined file.
+     * @param camera
+     *      The camera with which we will take the picture.
+     * @see android.hardware.Camera
+     * @see android.hardware.Camera#takePicture(Camera.ShutterCallback, Camera.PictureCallback, Camera.PictureCallback)
+     */
+    public static void takePicture(android.hardware.Camera camera) {
         SurfaceTexture surfaceTexture = new SurfaceTexture(10);
         try {
             camera.setPreviewTexture(surfaceTexture);
@@ -55,44 +83,49 @@ public class CardAcquisition {
             e.printStackTrace();
         }
 
-        android.hardware.Camera.Parameters params = camera.getParameters();
-        params.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-        //params.setAutoWhiteBalanceLock(false);
-        //params.setRecordingHint(true);
-        params.setPictureSize(1028,768);
-        params.setPictureFormat(ImageFormat.JPEG);
-        //camera.setParameters(params);
-
-        String path = MainActivity.path + "/photo"+".jpeg";
-
         android.hardware.Camera.PictureCallback pngCallback = new android.hardware.Camera.PictureCallback() {
             public void onPictureTaken(byte[] data, android.hardware.Camera camera) {
                 BufferedOutputStream bo = null;
+                String path = MainActivity.MAIN_PATH + "/photo.jpeg";
+                File pictureFile = new File(path);
                 try {
-                    String path = MainActivity.path + "/photo"+".jpeg";
-                    bo = new BufferedOutputStream( new FileOutputStream(path));
+
+                    bo = new BufferedOutputStream(new FileOutputStream(pictureFile));
                     bo.write(data);
                 } catch (Exception e) {
                     Log.e("TakePic", "Camera failed to take Picture: " + e.getMessage());
                 } finally {
-                    try { bo.close();} catch (Exception e) {}
+                    try {
+                        bo.close();
+                        camera.release();
+
+                    } catch (Exception e) {
+                    }
                 }
             }
         };
-        try{
-            camera.startPreview();
-            camera.takePicture(null, null, pngCallback);}
-        catch (Exception e){Log.e("TakePic2", "Camera failed to take Picture: " + e.getMessage());
-            e.printStackTrace();}
 
-        return path;
+        try {
+            camera.startPreview();
+            camera.takePicture(null, null, pngCallback);
+        } catch (Exception e) {
+            Log.e("TakePic2", "Camera failed to take Picture: " + e.getMessage());
+            e.printStackTrace();
+        }
+
     }
-    private static android.hardware.Camera openFrontalCamera() {
-        int cameraCount = 0;
+
+    /**
+     * This method is used to select the frontal camera of the cellphone if there is one.
+     * @return
+     *      The reference of the frontal camera.
+     */
+    public static android.hardware.Camera openFrontalCamera() {
+        int cameraCount;
         android.hardware.Camera cam = null;
         android.hardware.Camera.CameraInfo cameraInfo = new android.hardware.Camera.CameraInfo();
         cameraCount = android.hardware.Camera.getNumberOfCameras();
-        for (int camIdx = 0; camIdx<cameraCount; camIdx++) {
+        for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
             android.hardware.Camera.getCameraInfo(camIdx, cameraInfo);
             if (cameraInfo.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT) {
                 try {
@@ -103,5 +136,26 @@ public class CardAcquisition {
             }
         }
         return cam;
+    }
+
+    /**
+     * This method is used to analyze a picture after giving a path
+     * @param path
+     *      The absolute path of the picture
+     * @return
+     *      THe valeur of the card
+     */
+    private static String analyse(String path) {
+        cmpt++;
+        return String.valueOf(cmpt) + "A";
+    }
+
+    /**
+     * This method is used to set (or reset) the value of the recognised cards counter
+     * @param cmpt
+     *      The new value of the number of card scanned.
+     */
+    public static void setCmpt(int cmpt) {
+        CardAcquisition.cmpt = cmpt;
     }
 }

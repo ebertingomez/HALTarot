@@ -1,9 +1,14 @@
+/*
+ * Copyright (c) 2018. - Groupe 1PACT 42 - Projet HALTarot
+ */
+
 package fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.game;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import fr.telecom_paristech.pact42.tarot.tarotplayer.Activities.MainActivity;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.card.*;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.textFile.BidFile;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.textFile.CardFile;
@@ -17,9 +22,9 @@ public class Game {
 	// *** Constants ***
 
 	// File directories
-	public static final String CHIEN_FILE_NAME = "IA/data/chien.txt";
-	public static final String GAME_FILE_NAME = "IA/data/jeu.txt";
-	public static final String BID_FILE_NAME = "IA/data/encheres.txt";
+	public static final String CHIEN_FILE_NAME = MainActivity.MAIN_PATH+"/chien.txt";
+	public static final String GAME_FILE_NAME = MainActivity.MAIN_PATH+"/jeu.txt";
+	public static final String BID_FILE_NAME = MainActivity.MAIN_PATH+"/encheres.txt";
 
 	// Code for the return of bid() and play()
 	public static final int OVER = 0;
@@ -199,7 +204,7 @@ public class Game {
 
 		if(game == null) {
 			initGame(new RealPlayer(0), new RealPlayer(1),
-					new RealPlayer(2), new AIPlayer(3, new CardFile("IA/data/main.txt")));
+					new RealPlayer(2), new AIPlayer(3, new CardFile(MainActivity.AI_CARDS_PATH)));
 		}
 
 		return game.bidGame();

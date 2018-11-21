@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018. - Groupe 1PACT 42 - Projet HALTarot
+  -->
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,20 +11,12 @@
     android:background="#2B86DF"
     tools:context="fr.telecom_paristech.pact42.tarot.tarotplayer.Activities.PlayerIddleActivity">
 
-    <TextView
-        android:id="@+id/time"
-        android:layout_width="233dp"
-        android:layout_height="87dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="Time 11:11"
-        android:textColor="#FFFFFF"
-        android:textSize="35sp"
-        android:textStyle="bold"
+    <ImageView
+        android:id="@+id/information"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ask_question"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -29,13 +25,14 @@
         android:layout_height="152dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="60dp"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/iddle_next_turn"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView3"
@@ -54,76 +51,16 @@
         app:layout_constraintTop_toBottomOf="@+id/nextPlayer" />
 
 
-    <ImageView
-        android:id="@+id/firstCard"
-        android:layout_width="101dp"
-        android:layout_height="147dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <TextView
-        android:id="@+id/firstCardName"
-        android:layout_width="138dp"
-        android:layout_height="62dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:textColor="#FFFFFF"
-        android:textSize="35sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/firstCard"
-        app:layout_constraintStart_toStartOf="@+id/firstCard"
-        app:layout_constraintTop_toBottomOf="@+id/firstCard" />
-
-    <ImageView
-        android:id="@+id/secondCard"
-        android:layout_width="101dp"
-        android:layout_height="147dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintStart_toEndOf="@+id/firstCard"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <TextView
-        android:id="@+id/secondCardName"
-        android:layout_width="109dp"
-        android:layout_height="62dp"
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/cardScannedArray"
+        android:layout_width="321dp"
+        android:layout_height="137dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:textColor="#FFFFFF"
-        android:textSize="35sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/secondCard"
-        app:layout_constraintStart_toStartOf="@+id/secondCard"
-        app:layout_constraintTop_toBottomOf="@+id/secondCard" />
-
-    <ImageView
-        android:id="@+id/thirdCard"
-        android:layout_width="101dp"
-        android:layout_height="147dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/secondCard"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <TextView
-        android:id="@+id/thirdCardName"
-        android:layout_width="109dp"
-        android:layout_height="59dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:textColor="#FFFFFF"
-        android:textSize="35sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/thirdCard"
-        app:layout_constraintStart_toStartOf="@+id/thirdCard"
-        app:layout_constraintTop_toBottomOf="@+id/thirdCard" />
-
-
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/textView3"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,7 +1,11 @@
+<!--
+  ~ Copyright (c) 2018. - Groupe 1PACT 42 - Projet HALTarot
+  -->
+
 <resources>
     <string name="app_name">Tarot Player</string>
     <string name="action_settings">Settings</string>
-    <string name="mainTitle">AceTarot</string>
+    <string name="mainTitle">HALTarot</string>
     <string name="mainButtonPlay">PLAY!</string>
     <string name="version">version 1.0</string>
     <string name="difficultyTitle">AI MODE:</string>
@@ -10,6 +14,7 @@
     <string name="difficulty3">HARD</string>
     <string name="scanHand">Scan each card and wait for validation</string>
     <string name="successfulScan">Sucessful Scan</string>
+    <string name="unsuccessfulScan">Unable to detect the card, please select it from the list or rescan it.</string>
     <string name="popupEncheresTitle">Encheres</string>
     <string name="enchereText1">Chelem</string>
     <string name="enchereText2">Contre le Chien</string>
@@ -17,4 +22,5 @@
     <string name="enchereText4">Garde</string>
     <string name="enchereText5">Petite</string>
     <string name="enchereText6">Passe</string>
+    <string name="scoresWinningMessage">The winner of the game is</string>
 </resources>

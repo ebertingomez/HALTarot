@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018. - Groupe 1PACT 42 - Projet HALTarot
+  -->
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,6 +10,14 @@
     android:layout_height="match_parent"
     android:background="#FFA111"
     tools:context="fr.telecom_paristech.pact42.tarot.tarotplayer.Activities.EnchereActivity">
+
+    <ImageView
+        android:id="@+id/information"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ask_question"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/table"

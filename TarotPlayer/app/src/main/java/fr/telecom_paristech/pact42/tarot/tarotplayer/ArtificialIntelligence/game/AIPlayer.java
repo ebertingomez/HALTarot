@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018. - Groupe 1PACT 42 - Projet HALTarot
+ */
+
 package fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.game;
 
 import java.io.IOException;
@@ -7,7 +11,6 @@ import fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.aiIm
 import fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.card.Card;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.card.CardTree;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.card.Stack;
-import fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.qLearning.QLearningAI;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.textFile.CardFile;
 
 public class AIPlayer extends Player {
@@ -18,8 +21,7 @@ public class AIPlayer extends Player {
 	public AIPlayer(int position, CardFile mainFile) throws ClassNotFoundException, IOException {
 		super(position);
 		mainIA = mainFile.toCardTree();
-		this.ai = new QLearningAI(this);
-
+		this.ai = new AI_v1(this);
 		//System.out.println("\nLe joueur " + position + " a pour jeu :" + mainIA );
 	}
 

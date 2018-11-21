@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018. - Groupe 1PACT 42 - Projet HALTarot
+ */
+
 package fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.aiImplementation;
 
 import java.io.IOException;

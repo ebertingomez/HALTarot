@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018. - Groupe 1PACT 42 - Projet HALTarot
+  -->
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,20 +11,12 @@
     android:background="#2B86DF"
     tools:context="fr.telecom_paristech.pact42.tarot.tarotplayer.Activities.CardDecisionActivity">
 
-    <TextView
-        android:id="@+id/time"
-        android:layout_width="233dp"
-        android:layout_height="87dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="Time 11:11"
-        android:textColor="#FFFFFF"
-        android:textSize="35dp"
-        android:textStyle="bold"
+    <ImageView
+        android:id="@+id/information"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ask_question"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -29,15 +25,16 @@
         android:layout_height="104dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="28dp"
         android:gravity="center"
         android:text="Play the card 4"
         android:textColor="#FFFFFF"
         android:textSize="35dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.518"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/cardsArray"
