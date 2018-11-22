@@ -4,6 +4,7 @@
 
 package fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame;
 
+import android.content.res.AssetManager;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.Log;
@@ -12,6 +13,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import fr.telecom_paristech.pact42.tarot.tarotplayer.Activities.MainActivity;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.Divers.PhotoDegueuException;
@@ -26,6 +28,13 @@ public class CardAcquisition {
      * Number of pictures analyzed by the application
      */
     private static int cmpt = 0;
+
+    /**
+     * Loading the native Library on C++ to use openCV
+     */
+    static {
+        System.loadLibrary("native-lib");
+    }
 
     /**
      *  This method is used to analyze a picture taken by the application. The picture has to be the one of a hand card
@@ -147,8 +156,17 @@ public class CardAcquisition {
      */
     private static String analyse(String path) {
         cmpt++;
-        return String.valueOf(cmpt) + "A";
+        return analyzeFromJNI(path);
     }
+
+    /**
+     * A native method that is implemented by the 'native-lib' native library,
+     * which is packaged with this application to analyze the picture taken and determine
+     * if what kind of card it is.
+     */
+    public native static String analyzeFromJNI(String path);
+
+
 
     /**
      * This method is used to set (or reset) the value of the recognised cards counter

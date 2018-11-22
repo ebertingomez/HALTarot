@@ -14,3 +14,4 @@ Java_fr_telecom_1paristech_pact42_tarot_tarotplayer_CardGame_CardAcquisition_ana
     std::string res = paquet.analyse(path);
     return env->NewStringUTF(res.c_str());
 }
+

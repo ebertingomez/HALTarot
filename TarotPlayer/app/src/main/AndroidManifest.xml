@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.telecom_paristech.pact42.tarot.tarotplayer"
     android:versionCode="1"
-    android:versionName="1.0">
+    android:versionName="2.0">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -41,15 +41,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.DifficultyActivity" />
         <activity android:name=".Activities.PlayerActivity" />
-        <activity android:name=".Activities.ScanHandActivity" />
         <activity android:name=".Activities.ScanTableActivity" />
+        <activity android:name=".Activities.ScanHandActivity" />
         <activity android:name=".Activities.ScanChienActivity" />
         <activity android:name=".Activities.SuccessfulScanActivity" />
+        <activity android:name=".Activities.UnsuccessfulScanHandActivity" />
+        <activity android:name=".Activities.UnsuccessfulScanChienActivity" />
+        <activity android:name=".Activities.UnsuccessfulScanTableActivity" />
         <activity android:name=".Activities.EnchereActivity" />
         <activity android:name=".Activities.PlayerIddleActivity" />
-        <activity android:name=".Activities.CardDecisionActivity"></activity>
+        <activity android:name=".Activities.ChangeChienCardActivity" />
+        <activity android:name=".Activities.CardDecisionActivity" />
+        <activity android:name=".Activities.ScoresActivity"></activity>
     </application>
 
 </manifest>

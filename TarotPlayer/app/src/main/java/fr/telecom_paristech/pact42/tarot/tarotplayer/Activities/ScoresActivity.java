@@ -17,7 +17,7 @@ import fr.telecom_paristech.pact42.tarot.tarotplayer.Widgets.InformationDialog;
 /**
  *  This activity is used to show all players' scores and to start a new game.
  *  @version 1.0
- *  @see DifficultyActivity
+ *  @see PlayerActivity
  */
 public class ScoresActivity extends AppCompatActivity implements View.OnClickListener {
     /**
@@ -79,7 +79,7 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
      * a new game.
      *
      * @param view The view that was clicked.
-     * @see DifficultyActivity
+     * @see PlayerActivity
      * @see android.view.View.OnClickListener#onClick(View)
      */
     @Override
@@ -87,8 +87,8 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
         int id = view.getId();
         switch (id) {
         case R.id.button:
-            Intent difficultyActivity = new Intent(ScoresActivity.this, DifficultyActivity.class);
-            startActivity(difficultyActivity);
+            Intent playerActivity = new Intent(ScoresActivity.this, PlayerActivity.class);
+            startActivity(playerActivity);
             break;
         case R.id.information:
             String message = "Click on the button to validate the played card";

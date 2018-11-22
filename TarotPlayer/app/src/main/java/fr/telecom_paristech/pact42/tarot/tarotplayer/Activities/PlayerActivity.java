@@ -7,10 +7,15 @@ package fr.telecom_paristech.pact42.tarot.tarotplayer.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.io.File;
+import java.io.IOException;
+
+import fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.game.Game;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TarotGame;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.R;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.Widgets.InformationDialog;
@@ -19,7 +24,7 @@ import fr.telecom_paristech.pact42.tarot.tarotplayer.Widgets.WarningDialog;
  *  This activity is used to set the name of each player.
  *  @version 1.0
  *  @see ScanHandActivity
- *  @see DifficultyActivity
+ *  @see MainActivity
  *  @see #setPlayers()
  */
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener {
@@ -46,7 +51,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
      *  @see #onCreate(Bundle)
      *  @see TarotGame
      */
-    private TarotGame currentGame;
+    private TarotGame currentGame = new TarotGame();
     /**
      * {@inheritDoc}
      */
@@ -59,8 +64,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         goButton.setOnClickListener(this);
         info.setOnClickListener(this);
 
-        currentGame = getIntent()
-                .getParcelableExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME");
     }
     /**
      * Called when a view has been clicked. It is used to distinguish if the user asks for information or if he wants to set
@@ -76,6 +79,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         switch (id) {
         case R.id.playerGo:
             if (setPlayers()) {
+
+                createFile(MainActivity.AI_CARDS_PATH);
+                createFile(Game.GAME_FILE_NAME);
+                createFile(Game.BID_FILE_NAME);
+                createFile(Game.CHIEN_FILE_NAME);
+
                 Intent scanHandActivity = new Intent(PlayerActivity.this,
                         fr.telecom_paristech.pact42.tarot.tarotplayer.Activities.ScanHandActivity.class);
                 scanHandActivity.putExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME",
@@ -145,5 +154,23 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
      */
     public static String getPlayerName3() {
         return playerName3;
+    }
+
+    /**
+     * This method is used to delete and recreate all the files of the app.
+     * @param path
+     *  The absolute path of the file to create.
+     */
+    private void createFile(String path) {
+        try {
+            File file = new File(path);
+
+            if (file.exists()) {
+                file.delete();
+            }
+            file.createNewFile();
+        } catch (IOException e) {
+            Log.e("Creating file", "The file could not be created: " + e.getLocalizedMessage());
+        }
     }
 }

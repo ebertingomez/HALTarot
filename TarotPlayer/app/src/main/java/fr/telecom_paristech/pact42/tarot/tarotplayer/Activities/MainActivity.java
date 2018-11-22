@@ -26,7 +26,7 @@ import fr.telecom_paristech.pact42.tarot.tarotplayer.R;
  *  This is the main activity. It is used to welcome the players and to let them sign in using their Google Accounts. It has a button, so it implements the interface onclicklistener
  *  @version 1.0
  *  @see GoogleSignIn
- *  @see DifficultyActivity
+ *  @see PlayerActivity
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     /**
@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Called when a view has been clicked. It is used to sign in or to start a game.
      *
      * @param v The view that was clicked.
-     * @see DifficultyActivity
      * @see android.view.View.OnClickListener#onClick(View)
      */
     @Override
@@ -110,8 +109,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             break;
         case R.id.mainButtonPlay:
             createContentDir();
-            Intent difficultyActivity = new Intent(MainActivity.this, DifficultyActivity.class);
-            startActivity(difficultyActivity);
+            Intent playerActivity = new Intent(MainActivity.this, PlayerActivity.class);
+            startActivity(playerActivity);
             break;
         }
     }
