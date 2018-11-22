@@ -92,11 +92,11 @@ Carte::~Carte()
 
 }
 
-extern string chemin_absolu;
+string chemin_absolu;
 
 string Carte::analyse(string const& nom_fichier)
 {
-	chemin_absolu = nom_fichier + "/android/";
+	chemin_absolu = nom_fichier + "/";
 	Algorithme_surf image(chemin_absolu + "image.png");
 
 	if ( image.getCode() == "!!" )

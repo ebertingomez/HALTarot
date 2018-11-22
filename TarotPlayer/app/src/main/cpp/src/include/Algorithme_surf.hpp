@@ -4,8 +4,6 @@
 #include "Cache.hpp"
 #include "Histogramme.hpp"
 
-string chemin_absolu = "";
-
 using namespace std;
 using namespace cv;
 using namespace cv::xfeatures2d;

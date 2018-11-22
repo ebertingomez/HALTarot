@@ -11,7 +11,7 @@ Cache::Cache(bool modif):modif(modif), fichier_couleur(0), neurones_carte(ANN_ML
     toto = (char*)malloc(100);
     for(int i = 0 ; i < chemin_absolu.size() ; i++) toto[i] = chemin_absolu[i];
 
-    fichier_carac   = fopen(strcat(toto, "points caractéristiques"),modif ? "wb+" : "rb");
+    fichier_carac   = fopen(strcat(toto, "pointscaracteristiques"),modif ? "wb+" : "rb");
 	fichier_desc    = fopen(strcat(toto, "descripteurs"),modif ? "wb+" : "rb");
 	fichier_liste   = fopen(strcat(toto, "liste"),modif ? "w+" : "r");
 }
@@ -124,7 +124,7 @@ bool Cache::charge_couleurs()
 	pique		= imread(chemin_absolu + "pique.png",	0);
 	carreau		= imread(chemin_absolu + "carreau.png",	0);
 	coeur		= imread(chemin_absolu + "coeur.png",	0);
-	pissenlit	= imread(chemin_absolu + "trèfle.png",	0);
+	pissenlit	= imread(chemin_absolu + "trefle.png",	0);
 	return pique.data && coeur.data && carreau.data && pissenlit.data;
 }
 

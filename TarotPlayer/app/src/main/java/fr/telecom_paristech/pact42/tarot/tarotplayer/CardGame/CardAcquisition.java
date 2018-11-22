@@ -46,7 +46,7 @@ public class CardAcquisition {
      */
     public static String cardRecognitionHand() throws PhotoDegueuException {
         String res = "!!";
-        String path = MainActivity.MAIN_PATH + "/photo.jpeg";
+        String path = MainActivity.MAIN_PATH;
         res = analyse(path);
         res = res.toUpperCase();
         if (!TarotCardLibrary.cards.contains(res))
@@ -95,7 +95,7 @@ public class CardAcquisition {
         android.hardware.Camera.PictureCallback pngCallback = new android.hardware.Camera.PictureCallback() {
             public void onPictureTaken(byte[] data, android.hardware.Camera camera) {
                 BufferedOutputStream bo = null;
-                String path = MainActivity.MAIN_PATH + "/photo.jpeg";
+                String path = MainActivity.MAIN_PATH + "/image.png";
                 File pictureFile = new File(path);
                 try {
 
