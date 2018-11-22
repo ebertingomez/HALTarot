@@ -5,6 +5,7 @@
 package fr.telecom_paristech.pact42.tarot.tarotplayer.Activities;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,7 +14,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.game.Game;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TarotGame;
@@ -53,6 +57,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
      */
     private TarotGame currentGame = new TarotGame();
     /**
+     * List of all the assets which contains the files for the image recognition
+     */
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -79,12 +87,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         switch (id) {
         case R.id.playerGo:
             if (setPlayers()) {
-
-                createFile(MainActivity.AI_CARDS_PATH);
-                createFile(Game.GAME_FILE_NAME);
-                createFile(Game.BID_FILE_NAME);
-                createFile(Game.CHIEN_FILE_NAME);
-
+                initFiles();
                 Intent scanHandActivity = new Intent(PlayerActivity.this,
                         fr.telecom_paristech.pact42.tarot.tarotplayer.Activities.ScanHandActivity.class);
                 scanHandActivity.putExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME",
@@ -99,6 +102,66 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             break;
         }
 
+    }
+
+    private void initFiles() {
+        createFile(MainActivity.AI_CARDS_PATH);
+        createFile(Game.GAME_FILE_NAME);
+        createFile(Game.BID_FILE_NAME);
+        createFile(Game.CHIEN_FILE_NAME);
+
+        createFileFromAssets("arbrecouleurcarte");
+        createFileFromAssets("arbrecouleurcoin");
+        createFileFromAssets("arbretypecarte");
+        createFileFromAssets("arbretypecoin");
+        createFileFromAssets("carreau.png");
+        createFileFromAssets("coeur.png");
+        createFileFromAssets("couleurs");
+        createFileFromAssets("descripteurs");
+        createFileFromAssets("liste");
+        createFileFromAssets("pique.png");
+        createFileFromAssets("pointscaracteristiques");
+        createFileFromAssets("trefle.png");
+    }
+
+    private void createFileFromAssets(String asset) {
+        OutputStream outputStream = null;
+        InputStream is = null;
+        AssetManager mngr= this.getAssets();
+        try {
+            is = mngr.open(asset);
+
+            outputStream =
+                    new FileOutputStream(new File(MainActivity.MAIN_PATH+"/"+asset));
+
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = is.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    // outputStream.flush();
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
     }
 
     /**
