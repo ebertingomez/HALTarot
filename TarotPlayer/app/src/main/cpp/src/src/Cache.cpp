@@ -5,9 +5,8 @@ extern string chemin_absolu;
 
 string name;
 
-
-//Cache::Cache(bool modif):modif(modif), fichier_couleur(0), neurones_carte(ANN_MLP::load("données/neurones carte")), neurones_coin(ANN_MLP::load("données/neurones coin"))
-Cache::Cache(bool modif):modif(modif), fichier_couleur(0)
+//Cache::Cache(bool modif):modif(modif), fichier_couleur(0)
+Cache::Cache(bool modif):modif(modif), fichier_couleur(0), neurones_carte(ANN_MLP::load(chemin_absolu+"neuronescarte")), neurones_coin(ANN_MLP::load(chemin_absolu+"neuronescoins"))
 {
     name = chemin_absolu+"pointscaracteristiques";
     fichier_carac   = fopen(name.c_str(),modif ? "wb+" : "rb");
