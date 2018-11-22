@@ -1,11 +1,19 @@
 #include "Cache.hpp"
 #include "Algorithme_surf.hpp"
 
+extern string chemin_absolu;
+
+char* toto;
+
+
 Cache::Cache(bool modif):modif(modif), fichier_couleur(0), neurones_carte(ANN_MLP::load("données/neurones carte")), neurones_coin(ANN_MLP::load("données/neurones coin"))
 {
-	fichier_carac   = fopen("données/points caractéristiques",modif ? "wb+" : "rb");
-	fichier_desc    = fopen("données/descripteurs",modif ? "wb+" : "rb");
-	fichier_liste   = fopen("données/liste",modif ? "w+" : "r");
+    toto = (char*)malloc(100);
+    for(int i = 0 ; i < chemin_absolu.size() ; i++) toto[i] = chemin_absolu[i];
+
+    fichier_carac   = fopen(strcat(toto, "points caractéristiques"),modif ? "wb+" : "rb");
+	fichier_desc    = fopen(strcat(toto, "descripteurs"),modif ? "wb+" : "rb");
+	fichier_liste   = fopen(strcat(toto, "liste"),modif ? "w+" : "r");
 }
 
 bool Cache::verification_acces()
@@ -56,7 +64,7 @@ char str_to_int(string const& str)
 
 void Cache::attribuer_teinte(vector<Algorithme_surf*> paquet)
 {
-	if ( not fichier_couleur ) fichier_couleur = fopen("données/couleurs", "r");
+	if ( not fichier_couleur ) fichier_couleur = fopen(strcat(toto, + "couleurs"), "r");
 	int liste_teinte[22][20];
 	char code_toto[3];
 	for ( int i = 0 ; i < 22 ; i ++ )
@@ -79,7 +87,7 @@ void Cache::attribuer_teinte(vector<Algorithme_surf*> paquet)
 #ifdef CACHE_HISTO
 void Cache::insertion_couleur(string code, int* teinte)
 {
-	if ( not fichier_couleur ) fichier_couleur = fopen("données/couleurs", "w");
+	if ( not fichier_couleur ) fichier_couleur = fopen(strcat(toto,  "couleurs"), "w");
 	fprintf(fichier_couleur, "%s ", code.c_str());
 	for ( int i = 0 ; i < 20 ; i ++ ) fprintf(fichier_couleur, "%d ", teinte[i]);
 	fprintf(fichier_couleur, "\n");
@@ -113,10 +121,10 @@ void Cache::remplir(vector<Point>& liste, int taille)
 
 bool Cache::charge_couleurs()
 {
-	pique		= imread("données/pique.png",	0);
-	carreau		= imread("données/carreau.png",	0);
-	coeur		= imread("données/coeur.png",	0);
-	pissenlit	= imread("données/trèfle.png",	0);
+	pique		= imread(chemin_absolu + "pique.png",	0);
+	carreau		= imread(chemin_absolu + "carreau.png",	0);
+	coeur		= imread(chemin_absolu + "coeur.png",	0);
+	pissenlit	= imread(chemin_absolu + "trèfle.png",	0);
 	return pique.data && coeur.data && carreau.data && pissenlit.data;
 }
 

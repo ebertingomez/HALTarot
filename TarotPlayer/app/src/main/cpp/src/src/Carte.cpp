@@ -92,13 +92,16 @@ Carte::~Carte()
 
 }
 
+extern string chemin_absolu;
+
 string Carte::analyse(string const& nom_fichier)
 {
-	Algorithme_surf image(nom_fichier);
+	chemin_absolu = nom_fichier + "/android/";
+	Algorithme_surf image(chemin_absolu + "image.png");
 
 	if ( image.getCode() == "!!" )
 	{
-		cout << "ERREUR : " << nom_fichier << " inaccessible" << endl;
+		cout << "ERREUR : " << chemin_absolu << "image.png" << " inaccessible" << endl;
 		return "!!";
 	}
 

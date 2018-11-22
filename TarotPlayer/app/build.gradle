@@ -12,7 +12,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags "-std=c++14 -O1 -Wall -Wextra"
+                cppFlags "-std=c++14 -O1"
                 arguments "-DANDROID_STL=gnustl_shared"
             }
         }
