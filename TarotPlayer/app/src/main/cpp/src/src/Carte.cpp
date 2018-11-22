@@ -5,6 +5,7 @@
 
 using namespace std;
 using namespace cv;
+extern string chemin_absolu;
 
 void shell()
 {
@@ -92,11 +93,8 @@ Carte::~Carte()
 
 }
 
-string chemin_absolu;
-
 string Carte::analyse(string const& nom_fichier)
 {
-	chemin_absolu = nom_fichier + "/";
 	Algorithme_surf image(chemin_absolu + "image.png");
 
 	if ( image.getCode() == "!!" )

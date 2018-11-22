@@ -4,16 +4,25 @@
 extern string chemin_absolu;
 
 char* toto;
+string name;
 
 
-Cache::Cache(bool modif):modif(modif), fichier_couleur(0), neurones_carte(ANN_MLP::load("données/neurones carte")), neurones_coin(ANN_MLP::load("données/neurones coin"))
+//Cache::Cache(bool modif):modif(modif), fichier_couleur(0), neurones_carte(ANN_MLP::load("données/neurones carte")), neurones_coin(ANN_MLP::load("données/neurones coin"))
+Cache::Cache(bool modif):modif(modif), fichier_couleur(0)
 {
     toto = (char*)malloc(100);
-    for(int i = 0 ; i < chemin_absolu.size() ; i++) toto[i] = chemin_absolu[i];
-
+    for(int i = 0 ; i < chemin_absolu.size() ; i++){toto[i] = chemin_absolu[i];}
+    /*
     fichier_carac   = fopen(strcat(toto, "pointscaracteristiques"),modif ? "wb+" : "rb");
 	fichier_desc    = fopen(strcat(toto, "descripteurs"),modif ? "wb+" : "rb");
 	fichier_liste   = fopen(strcat(toto, "liste"),modif ? "w+" : "r");
+    */
+    name = chemin_absolu+"pointscaracteristiques";
+    fichier_carac   = fopen(name.c_str(),modif ? "wb+" : "rb");
+    name = chemin_absolu+"descripteurs";
+    fichier_desc    = fopen(name.c_str(),modif ? "wb+" : "rb");
+    name = chemin_absolu+"liste";
+    fichier_liste   = fopen(name.c_str(),modif ? "w+" : "r");
 }
 
 bool Cache::verification_acces()
@@ -64,7 +73,11 @@ char str_to_int(string const& str)
 
 void Cache::attribuer_teinte(vector<Algorithme_surf*> paquet)
 {
-	if ( not fichier_couleur ) fichier_couleur = fopen(strcat(toto, + "couleurs"), "r");
+	if ( not fichier_couleur )
+	{
+        name = chemin_absolu+"couleurs";
+        fichier_couleur = fopen(name.c_str(), "r");
+	}
 	int liste_teinte[22][20];
 	char code_toto[3];
 	for ( int i = 0 ; i < 22 ; i ++ )
@@ -87,7 +100,11 @@ void Cache::attribuer_teinte(vector<Algorithme_surf*> paquet)
 #ifdef CACHE_HISTO
 void Cache::insertion_couleur(string code, int* teinte)
 {
-	if ( not fichier_couleur ) fichier_couleur = fopen(strcat(toto,  "couleurs"), "w");
+	if ( not fichier_couleur )
+	{
+        name = chemin_absolu+"couleurs";
+	    fichier_couleur = fopen(name.c_str(), "w");
+	}
 	fprintf(fichier_couleur, "%s ", code.c_str());
 	for ( int i = 0 ; i < 20 ; i ++ ) fprintf(fichier_couleur, "%d ", teinte[i]);
 	fprintf(fichier_couleur, "\n");
