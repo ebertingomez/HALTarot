@@ -3,20 +3,12 @@
 
 extern string chemin_absolu;
 
-char* toto;
 string name;
 
 
 //Cache::Cache(bool modif):modif(modif), fichier_couleur(0), neurones_carte(ANN_MLP::load("données/neurones carte")), neurones_coin(ANN_MLP::load("données/neurones coin"))
 Cache::Cache(bool modif):modif(modif), fichier_couleur(0)
 {
-    toto = (char*)malloc(100);
-    for(int i = 0 ; i < chemin_absolu.size() ; i++){toto[i] = chemin_absolu[i];}
-    /*
-    fichier_carac   = fopen(strcat(toto, "pointscaracteristiques"),modif ? "wb+" : "rb");
-	fichier_desc    = fopen(strcat(toto, "descripteurs"),modif ? "wb+" : "rb");
-	fichier_liste   = fopen(strcat(toto, "liste"),modif ? "w+" : "r");
-    */
     name = chemin_absolu+"pointscaracteristiques";
     fichier_carac   = fopen(name.c_str(),modif ? "wb+" : "rb");
     name = chemin_absolu+"descripteurs";
