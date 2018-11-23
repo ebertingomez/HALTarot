@@ -1,75 +1,13 @@
 #include "Carte.hpp"
 #include "Isolation.hpp"
 
-//#define DEBUG_HOMOGRAPHIE
-
 using namespace std;
 using namespace cv;
 extern string chemin_absolu;
 
-void shell()
-{
-	char commande[50];
-	char* fichier;
-	Carte paquet;
+Carte* paquet_carte;
 
-	while ( strcmp(commande, "q") && strcmp(commande, "quit") && strcmp(commande, "stop") && strcmp(commande, "exit") )
-	{
-		printf(">  ");
-		scanf("%s", commande);
-
-		if ( strcmp(commande, "cherche") == 0 )
-		{
-			scanf("%s", commande);
-			cout << "------------>  " << paquet.analyse(commande) << endl;
-		}
-		else if ( strcmp(commande, "découpe_table") == 0 )
-		{
-			scanf("%s", commande);
-			Mat image = imread( string(commande), 1);
-			image = image(Range(image.rows/2, image.rows),Range::all());
-
-			for (int seuil = 150; seuil < 230; seuil += 5)
-				if (isolation_histogramme(image, seuil))
-					break;
-
-
-			//isolation_dijkstra(fichier, true);
-		}
-		else if ( strcmp(commande, "découpe") == 0 )
-		{
-			scanf("%s", commande);
-			isolation_dijkstra(string(commande), false);
-		}
-	}
-}
-
-Carte::Carte(string chemin):paquet(), cache(true)
-{
-    Histogramme::cache = &cache;
-    if ( cache.verification_acces())
-    {
-		if ( chemin[chemin.length()-1] != '/' ) chemin += '/';
-		DIR* dossier = opendir(chemin.c_str());
-		vector<char*> carte;
-		if ( dossier)
-		{
-			char* nom;
-			struct dirent* fichier = NULL;
-			while ( (fichier = readdir(dossier)) != NULL )
-			{
-				nom = fichier->d_name;
-				if (classification(nom, true) == AUTRE) paquet.push_back(new Algorithme_surf(chemin + string(nom)));
-			}
-			closedir(dossier);
-		} else cout << "ERREUR : dossier image innaccessible" << endl;
-
-		for ( int i = 0 ; i < paquet.size() ; i ++ )
-			paquet[i]->calcul_descripteurs();
-	}
-}
-
-Carte::Carte():paquet(), cache(false)
+Carte::Carte():paquet(), cache(false), petites_manquantes(), honneur_manquant()
 {
 	cache.charge_couleurs();
 	Histogramme::cache = &cache;
@@ -90,7 +28,6 @@ Carte::~Carte()
 	{
 		delete paquet[i];
 	}
-
 }
 
 string Carte::analyse(string const& nom_fichier)
@@ -103,10 +40,32 @@ string Carte::analyse(string const& nom_fichier)
 		return "!!";
 	}
 
+	return analyse(image);
+}
+
+string Carte::analyse(Mat const& nom_fichier)
+{
+	Algorithme_surf image(nom_fichier);
+	return analyse(image);
+}
+
+string Carte::analyse(Algorithme_surf& image)							// reconnaissance d'une carte
+{
+
 	image.histogramme();
 
 	int hauteur_carte = 0;
+	stringstream ss;
+
+	/*
+	 * on cherche à classifier grossièrement la carte (petit pique, petit coeur ...), ou autre.
+	 * "autre" decouvre les atouts et les honneurs,
+	 */
+
 	Classification couleur = image.classification_carte(&hauteur_carte);
+
+	hauteur_carte %= 10;
+
 	switch (couleur)
 	{
 
@@ -116,18 +75,28 @@ string Carte::analyse(string const& nom_fichier)
 
 	case PETITE_NOIRE:
 	case PETITE_ROUGE:
+		cout << "couleur illisible !" << endl;
+		return "!!";
 	case PETIT_CARREAU:
+		ss << hauteur_carte << "A";
+		break;
 	case PETIT_COEUR:
+		ss << hauteur_carte << "O";
+		break;
 	case PETIT_PIQUE:
+		ss << hauteur_carte << "P";
+		break;
 	case PETIT_TREFLE:
-	{
-		stringstream ss;
-		ss << hauteur_carte << " de " << transcription_francais(couleur);
-		return ss.str();
-	}
+		ss << hauteur_carte << "T";
+		break;
 	case AUTRE:
 
 		cout << "C'est un atout ou un honneur." << endl;
+
+		/*
+		 * On veut maintenant affiner la classification, pour distinguer les atouts des honneurs.
+		 * On découpe maintenant le coin supérieur gauche de la carte. Si c'est un honneur, ce coin contiendra un pique, un carreau, un trèfle ou um coeur.
+		 */
 
 		Mat morceau_;
 		if ( image.COLS > image.ROWS )
@@ -143,8 +112,23 @@ string Carte::analyse(string const& nom_fichier)
 		cout << "C'est un " << transcription_francais(couleur) << endl;
 
 		image.calcul_descripteurs();
-		return analyse_SURF(image, couleur);
+		string retour = analyse_SURF(image, couleur);						// recherche de matching SURF.
+
+		/*
+		 * Les honneurs sont symétriques. Donc la recherche des descripteurs se fait seulement sur la partie supérieure.
+		 * En cas d'échec, la section suivante refait la recherche avec la partie inférieure.
+		 *
+		 */
+
+		if ( retour == "--" and couleur != ATOUT)
+		{
+			image.calcul_descripteurs(false);
+			return analyse_SURF(image, couleur);
+		}
+		else return retour;
 	}
+
+	return ss.str();
 }
 
 long norme_euclidienne(int* x1, int* x2)
@@ -157,9 +141,10 @@ string Carte::analyse_SURF(Algorithme_surf banane, Classification couleur)
 {
 	long tri[78];
 	vector<DMatch>* liste_match;
-    for ( char i = 0 ; i < paquet.size() ; i ++ )
+    for ( char i = 0 ; i < paquet.size() ; i ++ )					// compare l'histogramme en teinte de l'image avec celui des cartes préenregistrées pertinentes.
     {
         tri[i] = -1;
+        if ( honneur_manquant.find(paquet[i]->getCode()) != honneur_manquant.end()) continue;
         switch (couleur)
         {
 		case HONNEUR_TREFLE:
@@ -185,7 +170,7 @@ string Carte::analyse_SURF(Algorithme_surf banane, Classification couleur)
 	while(true)
     {
         minimum = 0;
-        for ( char i = 0 ; i  < paquet.size() ; i ++ )
+        for ( char i = 0 ; i  < paquet.size() ; i ++ )					// la recherche de matching se fait par ordre de distance d'histogramme H décroissante.
         {
             if ( tri[i] != -1 && (tri[i] < tri[minimum] || tri[minimum] == -1))
                 minimum = i;
@@ -195,7 +180,7 @@ string Carte::analyse_SURF(Algorithme_surf banane, Classification couleur)
 
         cout << paquet[minimum]->getCode() << " : " << tri[minimum] << endl;
 
-		liste_match = paquet[minimum]->comparer(banane);
+		liste_match = paquet[minimum]->comparer(banane);				// matching
 		if ( banane.investigation(*paquet[minimum], *liste_match) )
 		{
 			delete liste_match;
@@ -220,3 +205,4 @@ void Carte::vers_fichier()
 		cache.insertion_carte(paquet[i]->getCode(), nb_lignes);
 	}
 }
+

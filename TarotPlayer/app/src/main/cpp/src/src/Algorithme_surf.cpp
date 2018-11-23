@@ -7,19 +7,24 @@ const int GOOD_PTS_MAX = 50;
 const float GOOD_PORTION = 0.15f;
 
 
-Algorithme_surf::Algorithme_surf(string const& fichier): Histogramme(fichier), rows(image.rows), cols(image.cols), descripteurs(0), points(0), refer_vector_points(0)
+Algorithme_surf::Algorithme_surf(string const& fichier): Histogramme(fichier), rows(image.rows), cols(image.cols), descripteurs(0), points_carac(0), refer_vector_points(0)
 {}
 
-Algorithme_surf::Algorithme_surf(string code, int occurences): Histogramme(code, false), refer_vector_points(0)
+Algorithme_surf::Algorithme_surf(Mat const& carte): Histogramme(carte, "--")
+{}
+
+
+Algorithme_surf::Algorithme_surf(string code, int occurences): Histogramme(code, false), refer_vector_points(0)					// chargement des descripteurs préenregistrés
+
 {
 	descripteurs = new Mat(occurences, 64, CV_32F);
-	points = (KeyPoint*) malloc(occurences * sizeof(KeyPoint));
+	points_carac = (KeyPoint*) malloc(occurences * sizeof(KeyPoint));
 	for ( int i = 0 ; i < occurences ; i ++ )
 	{
-		cache->lire_point(points+i);
+		cache->lire_point(points_carac+i);
 		cache->lire_desc(descripteurs->ptr<float>(i));
-		if ( (points+i)->pt.x > cols ) cols = (points+i)->pt.x;
-		if ( (points+i)->pt.y > rows ) rows = (points+i)->pt.y;
+		if ( (points_carac+i)->pt.x > cols ) cols = (points_carac+i)->pt.x;
+		if ( (points_carac+i)->pt.y > rows ) rows = (points_carac+i)->pt.y;
 	}
 }
 
@@ -28,20 +33,25 @@ Algorithme_surf::~Algorithme_surf()
 	//if(points) free(points);
 }
 
-void Algorithme_surf::calcul_descripteurs()
+void Algorithme_surf::calcul_descripteurs(bool haut)
 {
 	static Ptr<SURF> detector = SURF::create();
 
 	refer_vector_points = new vector<KeyPoint>();
 	descripteurs = new Mat();
 
-	if ( image.channels() != 1 ) extractChannel(image, image, 2);
-	detector->detectAndCompute(image, Mat(), *refer_vector_points, *descripteurs);
-	points = refer_vector_points->data();
+	Mat demi_image;
+	if (haut)		demi_image = image(Range(0,				image.rows/2), Range::all());
+	else 			demi_image = image(Range(image.rows/2,	image.rows	), Range::all());
+
+
+	if ( image.channels() != 1 ) extractChannel(demi_image, demi_image, 2);
+	detector->detectAndCompute(demi_image, Mat(), *refer_vector_points, *descripteurs);
+	points_carac = refer_vector_points->data();
 
 }
 
-vector<DMatch>* Algorithme_surf::comparer(Algorithme_surf autre)
+vector<DMatch>* Algorithme_surf::comparer(Algorithme_surf autre)		// matching par force brute
 {
 	vector<DMatch> matches;
 
@@ -65,12 +75,12 @@ vector<DMatch>* Algorithme_surf::comparer(Algorithme_surf autre)
 short Algorithme_surf::vers_fichier()
 {
 	int j;
-	cache->insertion_points(points, descripteurs->rows);
-	cache->insertion_desc(*descripteurs);
+	cache->insertion_points(points_carac, descripteurs->rows);
+	cache->insertion_desc(descripteurs);
 	return descripteurs->rows;
 }
 
-bool Algorithme_surf::investigation(Algorithme_surf echantillon, vector<DMatch> const& abricot)
+bool Algorithme_surf::investigation(Algorithme_surf echantillon, vector<DMatch> const& abricot)			// matching par recherche d'homographie
 {
 	vector<Point2f> source, destination;
 	vector<uchar> mask(abricot.size());
@@ -79,7 +89,7 @@ bool Algorithme_surf::investigation(Algorithme_surf echantillon, vector<DMatch> 
 	for ( int w = 0 ; w < abricot.size() ; w ++ )
 	{
 		source.push_back( echantillon.getPoint( abricot[w].queryIdx ).pt );
-		destination.push_back( points[ abricot[w].trainIdx ].pt );
+		destination.push_back( points_carac[ abricot[w].trainIdx ].pt );
 	}
 	homo = findHomography(source, destination, RANSAC, 3, mask);
 

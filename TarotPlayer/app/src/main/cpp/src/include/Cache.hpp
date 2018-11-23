@@ -7,12 +7,10 @@
 #include <cstring>
 #include <cstdio>
 #include "opencv2/opencv.hpp"
-#include "opencv2/dnn.hpp"
 #include "opencv2/calib3d.hpp"
 #include "opencv2/stitching/detail/matchers.hpp"
 #include "opencv2/xfeatures2d/nonfree.hpp"
 
-#define CACHE_HISTO
 #define ABS(a) (((a)>0)?(a):-(a))
 
 
@@ -73,9 +71,12 @@ public:
 
 	bool verification_acces();
 
-	void insertion_points(KeyPoint* points, int occurences);
+	void insertion_points(KeyPoint* points_carac, int occurences);
+	void insertion_desc(Mat* desc);
 	void insertion_carte(string nom, int occurences);
 	void insertion_couleur(string code, int* teinte);
+
+	void attribuer_teinte(vector<Algorithme_surf*>& paquet);
 
 	void lire_point(KeyPoint* poin) const;
 	void lire_desc(float* toto) const;
@@ -87,12 +88,6 @@ public:
     Mat const& getCarreau()					{ return carreau; }
     Mat const& getPissenlit()				{ return pissenlit; }
 
-    const Ptr<ANN_MLP> neurones_carte;
-    const Ptr<ANN_MLP> neurones_coin;
-
-    void attribuer_teinte(vector<Algorithme_surf*> paquet);
-
-    void insertion_desc(const Mat &desc);
 };
 
 #endif

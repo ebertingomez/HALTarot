@@ -32,7 +32,8 @@ Histogramme::Histogramme(Mat const image, string code): code(code), note_total(0
 {
     if (!image.data || image.channels() != 3)
     {
-        cout << "ERREUR : objet Histomgramme initialisé avec matrice non valide " << endl;
+        cout << "ERREUR : objet Histomgramme initialisé avec matrice non valide" << endl;
+        cout << "data : " << image.data << "   -------  channels : " << image.channels() << endl;
         code = "!!";
     }
     note_total = image.cols*image.rows;
@@ -68,8 +69,7 @@ void Histogramme::histogramme()
         {
 			for ( i = 0 ; i < 20 ; i ++ )
 			{
-				valeur[k]		+= histo.at<float>(i,j,k);
-				valeur_glob[k]	+= histo.at<float>(i,j,k);
+				valeur[k]	+= histo.at<float>(i,j,k);
 				saturation[j]	+= histo.at<float>(i,j,k);
 			}
 		}
@@ -79,14 +79,14 @@ void Histogramme::histogramme()
 			{
 				saturation[j]	+= histo.at<float>(i%20,j,k);
 				rapport_rouge	+= histo.at<float>(i%20,j,k);
-				valeur_glob[k]	+= histo.at<float>(i%20,j,k);
+				valeur[k]		+= histo.at<float>(i%20,j,k);
 				teinte[i]		+= histo.at<float>(i%20,j,k);
 			}
 			for ( i = 2 ; i < 18 ; i ++ )
 			{
 				teinte[i]		+= histo.at<float>(i,j,k);
 				saturation[j]	+= histo.at<float>(i,j,k);
-				valeur_glob[k]	+= histo.at<float>(i,j,k);
+				valeur[k]		+= histo.at<float>(i,j,k);
 			}
 		}
 	}
@@ -95,25 +95,32 @@ void Histogramme::histogramme()
 	for ( i = 0 ; i < 20 ; i ++ ) teinte[i] *= 10000.0 / poids;
 }
 
+/*
+ * Soit un 20-uplet. La fonction suivante recherche dans ce 20-uplet l'indice du maximum et celui du deuxième plus grand maximum local.
+ * Par exemple, si "valeur" est l'histogramme en saturation d'un 8 de carreau. Cet histogramme présentera deux maximum locaux bien distincts, correspondant à l'aire blanche
+ * et à l'aire rouge de la carte.
+ * Cette fonction renvoie vrai si de tels maxima locaux existent, sont suffisamment distincts, et dont l'intensité est suffisamment proche en ordre de randeur.
+ */
 
 bool Histogramme::maxima(unsigned int* valeur, int& max, int& second)
 {
 	max = -1; second = -1;
 	for ( int i = 0 ; i < 20 ; i ++ )
 	{
-		if ( i == 0  && valeur [0] < valeur[1]  ) continue;
-		if ( i == 19 && valeur[19] < valeur[18] ) continue;
-		if ( valeur[i] < valeur[i+1] || valeur[i] < valeur[i-1] ) continue;
+		if ( i == 0 and valeur [0] <= valeur[1]  ) continue;
+		if ( i == 19 and valeur[19] <= valeur[18] ) continue;
+		if ( i != 0 and i != 19 and (valeur[i] < valeur[i+1] or valeur[i] < valeur[i-1] )) continue;
 
 		if ( max == -1 ) max = i;
-		else if ( valeur[i] < valeur[max] && max - i > 3)
+		else if ( valeur[i] < valeur[max] && i - max > 3)
 		{
 			if ( second == -1 ) second = i;
 			else if ( valeur[second] < valeur[i]) second = i;
 		}
-		else
+		else if ( valeur[i] > valeur[max])
 		{
-			if ( i - max > 3 ) second = max;
+			 if ( i - max > 3 )
+				second = max;
 			max = i;
 		}
 	}
@@ -127,6 +134,14 @@ bool Histogramme::maxima(unsigned int* valeur, int& max, int& second)
 
 struct dkfjhgnkjhg { bool operator() ( vector<Point> i , vector<Point> j ) { return contourArea(i) < contourArea(j); } } compare_aire;
 
+extern int plafond_ressemblance_couleur;
+
+/*
+ * Cette fonction recherche la couleur d'une carte. Elle prend en paramètre une image binaire, sur laquelle elle recherche les piques, les carreaux ... etc.
+ * Elle identifie ces motifs par superposition avec les quatres couleurs possibles.
+ *
+ */
+
 Classification Histogramme::classification_couleur(Mat const& image, bool rouge, bool honneur, int* nombre_match)
 {
 	vector<vector<Point>> contours;
@@ -135,9 +150,11 @@ Classification Histogramme::classification_couleur(Mat const& image, bool rouge,
 	Mat pre_miniature, pre_miniaturef;
 	Point2f original[3];
 	Rect rectangle;
-	const Point2f dimensions_miniature[3] = { Point(MINIATURE_LARGEUR, 0) , Point(0,0) , Point(0, MINIATURE_HAUTEUR) };
+	static Point2f dimensions_miniature[3] = { Point(MINIATURE_LARGEUR, 0) , Point(0,0) , Point(0, MINIATURE_HAUTEUR) };
+	dimensions_miniature[0].x = MINIATURE_LARGEUR;
 
 	Mat image_binaire = image.clone();
+
 	findContours(image_binaire, contours, topologie, RETR_TREE, CHAIN_APPROX_TC89_L1);
 
 	Classification sortie = AUTRE;
@@ -173,33 +190,27 @@ Classification Histogramme::classification_couleur(Mat const& image, bool rouge,
 			int norm_carreau	= norm(MASQUE(cache->getCarreau()),		255 * miniature);
 
 			#ifdef DEBUG_
-			cout << "distance coeur : "		<< norm_coeur << endl;
-			cout << "distance carreau : "	<< norm_carreau << endl;
+			cout << "distance coeur : "		<< norm_coeur << "     -------------       distance carreau : "	<< norm_carreau << endl;
 			#endif
 
 			flip(miniature, miniature, 0);
 
-			norm_coeur		= min( norm_coeur,	(int) norm(MASQUE(cache->getCoeur()),		255 * miniature));
+			norm_coeur		= min( norm_coeur,	(int) norm(MASQUE(cache->getCoeur()),	255 * miniature));
 
 			#ifdef DEBUG_
-			cout << "distance coeur : "		<< norm_coeur << endl;
-			cout << "distance carreau : "	<< norm_carreau << endl;
+			cout << "distance coeur : "		<< norm_coeur << "     -------------       distance carreau : "	<< norm_carreau << endl;
 			#endif
 
-			if ( honneur ) return (norm_coeur > norm_carreau) ? HONNEUR_CARREAU : HONNEUR_COEUR;
-			if ( norm_coeur < norm_carreau and norm_coeur	< 4000 ) sortie = PETIT_COEUR;
-			if ( norm_coeur > norm_carreau and norm_carreau	< 4000 ) sortie = PETIT_CARREAU;
+			if ( norm_coeur < norm_carreau and norm_coeur	< plafond_ressemblance_couleur ) sortie = honneur ? HONNEUR_COEUR : PETIT_COEUR;
+			if ( norm_coeur > norm_carreau and norm_carreau	< plafond_ressemblance_couleur ) sortie = honneur ? HONNEUR_CARREAU : PETIT_CARREAU;
 		}
 		else
 		{
-			Mat test = MASQUE(cache->getPique());
-
 			int norm_pique		= norm(MASQUE(cache->getPique()),		miniature);
 			int norm_pissenlit	= norm(MASQUE(cache->getPissenlit()),	miniature);
 
 			#ifdef DEBUG_
-			cout << "distance pique : "		<< norm_pique << endl;
-			cout << "distance trèfle : "	<< norm_pissenlit << endl;
+			cout << "distance pique : "		<< norm_pique <<  "     -------------       distance trèfle : "	<< norm_pissenlit << endl;
 			#endif
 
 			flip(miniature, miniature, 0);
@@ -209,19 +220,18 @@ Classification Histogramme::classification_couleur(Mat const& image, bool rouge,
 
 
 			#ifdef DEBUG_
-			cout << "distance pique : "		<< norm_pique << endl;
-			cout << "distance trèfle : "	<< norm_pissenlit << endl;
+			cout << "distance pique : "		<< norm_pique <<  "     -------------       distance trèfle : "	<< norm_pissenlit << endl;
 			#endif
 
-			if ( honneur ) return (norm_pique < norm_pissenlit) ? HONNEUR_PIQUE : HONNEUR_TREFLE;
-			if ( norm_pique < norm_pissenlit and norm_pique		< 4000 ) sortie = PETIT_PIQUE;
-			if ( norm_pique > norm_pissenlit and norm_pissenlit	< 4000 ) sortie = PETIT_TREFLE;
+			if ( norm_pique < norm_pissenlit and norm_pique		< plafond_ressemblance_couleur ) sortie = honneur ? HONNEUR_PIQUE : PETIT_PIQUE;
+			if ( norm_pique > norm_pissenlit and norm_pissenlit	< plafond_ressemblance_couleur ) sortie = honneur ? HONNEUR_TREFLE : PETIT_TREFLE;
 		}
+		if (honneur) return sortie;
 	}
 	return sortie;
 }
 
-Mat* isole_rouge(Mat image)
+Mat* isole_rouge(Mat image, int milieu)									// construit l'image binaire d'une carte rouge
 {
 	Mat* rouge = new Mat(image.rows,image.cols, CV_8U);
 	int lignes = image.rows;
@@ -240,7 +250,7 @@ Mat* isole_rouge(Mat image)
 		ptr_rouge = rouge->ptr<uchar>(i);
 		for ( int j = 0 ; j < colonnes ; j ++ )
 		{
-			if ( ptr[3*j+1] > 53 && ( ptr[3*j] < 13 || ptr[3*j] > 230 )) ptr_rouge[j] = 1;
+			if ( ptr[3*j+1] > milieu*13 && ( ptr[3*j] < 13 || ptr[3*j] > 160 )) ptr_rouge[j] = 1;
 			else ptr_rouge[j] = 0;
 		}
 	}
@@ -249,84 +259,119 @@ Mat* isole_rouge(Mat image)
 
 void somme_cumule(unsigned int* valeur) { for ( int i = 1 ; i < 20 ; i ++ ) valeur[i] += valeur[i-1]; }
 
-Classification Histogramme::classification_neuronale(bool honneur)
+/*
+ *
+ * Utilise des arbres boosté (anciennement des réseau neuronaux) pour déterminer la nature d'une carte :
+ * - petite rouge
+ * - petite noire
+ * - autre (atout et honneur)
+ *
+ */
+
+Classification Histogramme::classification_neuronale()
 {
-	float entre[125];
-	vector<float> sortie(4);
+	static const Ptr<Boost> arbre_type		= Boost::load("data/arbre_type_carte");
+    static const Ptr<Boost> arbre_couleur	= Boost::load("data/arbre_couleur_carte");
 
-    for (int i = 0; i < 125; i++)
+	vector<float> entre(85);
+	vector<float> sortie(1);
+
+	float normalise = 1000.0/note_total;
+
+    for (int i = 0; i < 25; i++)
+		entre[i] 	= (float)somme_cube(histo,i)*normalise;
+	for (int i = 25; i < 35; i++)
+		entre[i-25] = (float)somme_cube(histo,i)*normalise;
+	for (int i = 35; i < 50; i++)
+		entre[i-10] = (float)somme_cube(histo,i)*normalise;
+	for (int i = 50; i < 60; i++)
+		entre[i-50] = (float)somme_cube(histo,i)*normalise;
+	for (int i = 60; i < 75; i++)
+		entre[i-20] = (float)somme_cube(histo,i)*normalise;
+	for (int i = 75; i < 85; i++)
+		entre[i-75] = (float)somme_cube(histo,i)*normalise;
+	for (int i = 85; i < 100; i++)
+		entre[i-30] = (float)somme_cube(histo,i)*normalise;
+	for (int i = 100; i < 110; i++)
+		entre[i-100] =(float)somme_cube(histo,i)*normalise;
+	for (int i = 110; i < 125; i++)
+		entre[i-40] = (float)somme_cube(histo,i)*normalise;
+
+
+	for (int i = 0; i < 85; i++)
+		cout << entre[i] << "," ;
+
+
+	arbre_type->predict(entre, sortie);
+	if ( sortie[0] == -1 )
 	{
-		entre[i] = (float)somme_cube(histo,i)/note_total;
-		cout << entre[i] << ",";
-	}
-	if ( not honneur )	cache->neurones_carte->predict(vector<float>(entre, entre+125), sortie);
-    else 				cache->neurones_coin ->predict(vector<float>(entre, entre+125), sortie);
-
-	#ifdef DEBUG_
-    cout << endl << "résultats du réseau de neurone :    autre : " 	<< sortie[0] <<  " ---- noir : "
-																	<< sortie[1] << " ----   rouge : "
-																	<< sortie[2] << " ----- rien : "
-																	<< sortie[3] << endl;
-    #endif
-
-	if ( sortie[1] < -0.7 or sortie[2] < -0.7 or sortie[1] < -0.7 ) return RIEN;
-	if ( honneur )
-	{
-		if ( sortie[1] > 0.7 ) return HONNEUR_NOIR;
-		if ( sortie[2] > 0.7 ) return HONNEUR_ROUGE;
-		if ( sortie[0] > 0.7 ) return ATOUT;
+		arbre_couleur->predict(entre, sortie);
+		if ( sortie[0] == 1 )
+			return PETITE_NOIRE;
+		else
+			return PETITE_ROUGE;
 	}
 	else
-	{
-		if ( sortie[1] > 0.7 ) return PETITE_NOIRE;
-		if ( sortie[2] > 0.7 ) return PETITE_ROUGE;
-		if ( sortie[0] > 0.7 ) return AUTRE;
-	}
-
-    return RIEN;
+		return AUTRE;
 }
 
 Classification Histogramme::classification_carte(int* hauteur_carte)
 {
-	Classification classe = classification_neuronale(hauteur_carte == 0);
+	Classification classe;
 
 	int max, second;
 
-	bool noir_possible = maxima(valeur, max, second);
-	int milieu_noir = (max + second) / 2;
-	somme_cumule(valeur);
+	bool noir_possible, rouge_possible;
+	int milieu_rouge, milieu_noir;
+	Mat* image_binaire_rouge;
+	Mat image_binaire_noire;
 
-	switch (classe)
+	if (rouge_possible = 	maxima(saturation, max, second))
+		milieu_rouge = (max + second) / 2;
+
+	if ( noir_possible =	maxima(valeur, max, second))
+		milieu_noir = (max + second) / 2;
+
+	if ( rouge_possible and noir_possible )								// différentie carte rouge et noire, en comparant la variance des histogramme S et V.
 	{
-
-	case PETITE_NOIRE:
-	case HONNEUR_NOIR:
-	{
-		Mat image_binaire;
-		extractChannel(image, image_binaire, 2);
-		compare(image_binaire, Scalar(milieu_noir*256/20), image_binaire, CMP_LE );
-
-		return classification_couleur(image_binaire, false, hauteur_carte == 0, hauteur_carte);
+		float moyenne_rouge(0), moyenne_noire(0), moyenne2_rouge(0), moyenne2_noire(0), total_rouge(0), total_noire(0);
+		for (int i = 0; i < 20; i++)
+		{
+			total_rouge		+= 		saturation[i];
+			total_noire		+=		valeur[i];
+			moyenne_rouge 	+= i *	saturation[i];
+			moyenne2_rouge	+= i *	saturation[i] * i;
+			moyenne_noire 	+= i *	valeur[i];
+			moyenne2_noire	+= i *	valeur[i] * i;
+		}
+		if ((moyenne2_rouge - moyenne_rouge * moyenne_rouge / total_rouge) / total_rouge >
+			(moyenne2_noire - moyenne_noire * moyenne_noire / total_noire) / total_noire)
+				noir_possible	= false;
+		else 	rouge_possible	= false;
 	}
 
-	case PETITE_ROUGE:
-	case HONNEUR_ROUGE:
+	if ( rouge_possible )
 	{
-		bool rouge_possible = maxima(&(saturation[0]), max, second);
-		int milieu_rouge = (max + second) / 2;
-		Mat* image_binaire = isole_rouge(image);
+		image_binaire_rouge = isole_rouge(image, milieu_rouge);
+		classe = classification_couleur(*image_binaire_rouge, true, hauteur_carte == 0, hauteur_carte);
+		delete image_binaire_rouge;
 
-		classe = classification_couleur(*image_binaire, true, hauteur_carte == 0, hauteur_carte);
-		delete image_binaire;
-
-		return classe;
+		if ( classe != AUTRE ) return classe;
 	}
 
-	case RIEN:
-		return RIEN;
+	if ( noir_possible )
+	{
 
-	default:
-		return (hauteur_carte == 0)? ATOUT : AUTRE;
+		extractChannel(image, image_binaire_noire, 2);
+		compare(image_binaire_noire, Scalar(milieu_noir*256/20), image_binaire_noire, CMP_LE );
+
+		classe =  classification_couleur(image_binaire_noire, false, hauteur_carte == 0, hauteur_carte);
+		if ( classe != AUTRE ) return classe;
 	}
+
+	if (hauteur_carte == 0)	return ATOUT;
+
+	return AUTRE;
+
 }
 
