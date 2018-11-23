@@ -38,7 +38,7 @@ public :
     void histogramme();
     void teinte_atout();
     float distance_teinte(Histogramme const& autre);
-    Classification classification_neuronale(bool honneur);
+    Classification classification_neuronale();
     Classification classification_carte(int* hauteur_carte = 0);
 
     void affiche_image(string const& titre) { imshow(titre,image); waitKey(0); }

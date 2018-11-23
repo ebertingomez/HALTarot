@@ -34,15 +34,15 @@ void somme_mat_3x3(Mat a, Mat b)
 	}
 }
 
-pair<float, float> regression(vector<Vec4f> lignes)
+pair<float, float> regression(vector<Vec4i> lignes)
 {
 	float moyenne_x = 0;
 	float moyenne_y = 0;
 
 	for (int i = 0; i < lignes.size(); i++)
 	{
-		moyenne_x += lignes[i][0] + lignes[i][2];
-		moyenne_y += lignes[i][1] + lignes[i][3];
+		moyenne_x += (float)lignes[i][0] + lignes[i][2];
+		moyenne_y += (float)lignes[i][1] + lignes[i][3];
 	}
 
 	moyenne_x /= lignes.size() * 2;
@@ -184,101 +184,174 @@ bool vraisemblance_rectangle(Point2f* scene, int rows, int cols)
 	return true;
 }
 
-extern Point2f points[];
+extern Point2f* points;
+extern Mat image;
+extern ofstream fichier;
 
-void Plage_cartes::transformer(vector<Vec4f>& lignes)
+Point2f intersection_segment(Vec4f const& a, Vec4f const& b)
 {
-	Mat un_point(2,2,CV_32S);
-	for (int i = 0; i < lignes.size(); i++)
-	{
-		un_point.ptr(0)[0] = lignes[i][0];
-		un_point.ptr(0)[1] = lignes[i][1];
-		un_point.ptr(1)[0] = lignes[i][2];
-		un_point.ptr(1)[1] = lignes[i][3];
-
-		perspectiveTransform(un_point, un_point, H_en_vigueur);
-
-		lignes[i][0] = un_point.ptr(0)[0];
-		lignes[i][1] = un_point.ptr(0)[1];
-		lignes[i][2] = un_point.ptr(1)[0];
-		lignes[i][3] = un_point.ptr(1)[1];
-	}
+	float determinant_principal =  (a[1]-a[3])*(b[2]-b[0]) - (a[0]-a[2]) * (b[3]-b[1]);
+	if ( ABS(determinant_principal) < 0.001 )
+		return Point2f(-1, -1);
+	return Point2f( 	( (b[2]-b[0]) * (a[2]*a[1] - a[0]*a[3]) + (a[0]-a[2]) * (b[2]*b[1] - b[0]*b[3])) / determinant_principal,
+						( (a[1]-a[3]) * (b[2]*b[1] - b[0]*b[3]) + (b[3]-b[1]) * (a[2]*a[1] - a[0]*a[3])) / determinant_principal);
 }
 
-void Plage_cartes::transformer_inverse()
+Point2f intersection_droites(pair<float,float> d1, pair<float,float> d2 )
 {
-	vector<Point2f> points_(points, points+4);
-	perspectiveTransform(points_, points_, H_en_vigueur.inv());
-	points[0] = points_[0];
-	points[1] = points_[1];
-	points[2] = points_[2];
-	points[3] = points_[3];
+	if ( d1.first < 0 and d1.second < 0 and d2.first < 0 and d2.second < 0 )	return Point2f(-1,-1);
+	if ( d1.first < 0 and d1.second < 0 )										return Point2f(-d1.second, d2.second - d1.second * d1.first);
+	if ( d2.first < 0 and d2.second < 0 )										return Point2f(-d2.second, d1.second - d2.second * d2.first);
+	if ( ABS( d1.first - d2.second ) < 0.001 )									return Point2f(-1,-1);
+
+	return Point2f ( (d1.second - d2.second) / (d2.first - d1.first) , (d1.second * d2.first - d2.second * d1.first ) / (d2.first- d1.first) );
 }
-void Plage_cartes::appliquer(){}
 
 Point2f intersection_segment(Point2f a1, Point2f a2, Point2f b1, Point2f b2)
 {
 	float determinant_principal =  (a1.y-a2.y)*(b2.x-b1.x) - (a1.x-a2.x) * (b2.y-b1.y);
-	if ( determinant_principal < 0.001 )
+	if ( ABS(determinant_principal) < 0.001 )
 		return Point2f(-1, -1);
 	return Point2f( 	( (b2.x-b1.x) * (a2.x*a1.y - a1.x*a2.y) + (a1.x-a2.x) * (b2.x*b1.y - b1.x*b2.y)) / determinant_principal,
 						( (a1.y-a2.y) * (b2.x*b1.y - b1.x*b2.y) + (b2.y-b1.y) * (a2.x*a1.y - a1.x*a2.y)) / determinant_principal);
 }
 
-Plage_cartes::Plage_cartes(): H_en_vigueur(3,3,CV_64F) {}
+/*
+ * Enregistre dans l'instance de Plage_cartes une carte détectée, représentée par la liste de ses quatre sommets.
+ * La fonction vérifie si la carte détectée ne se superpose pas avec une carte précédamment détectée.
+ */
 
-bool Plage_cartes::ajouter(vector<Point2f>& carte)
+bool Plage_cartes::ajouter(Point2f* carte)
 {
-	float min_cote = MIN4 (
-			DISTANCE(	carte[0], carte[1]	),
-			DISTANCE(	carte[0], carte[3]	),
-			DISTANCE(	carte[3], carte[2]	),
-			DISTANCE(	carte[1], carte[2]	));
+	float aire_nouvelle = AIRE(carte[0], carte[1], carte[2], carte[3]);
+	Point2f milieu;
 
-	for (int i = 0; i < plages.size(); i++)
+	for (int i = 0; i < plages.size(); i+=4)
 	{
-		if ( DISTANCE(	intersection_segment(carte[0]		,carte[2]		,carte[1]		,carte[3]) ,
-						intersection_segment(plages[i][0]	,plages[i][2]	,plages[i][1]	,plages[i][3]) ) < min_cote ) return false;
-	}
-
-
-	if ( not plages.empty() )
-	{
-		vector<Point2f> carte_redresse;
-		perspectiveTransform(carte, carte_redresse, H_en_vigueur);
-
-		if ( not vraisemblance_rectangle(carte_redresse.data()) ) return false;
-		float distance_01 = DISTANCE ( carte_redresse[0], carte_redresse[1]);
-		float distance_12 = DISTANCE ( carte_redresse[1], carte_redresse[2]);
-
-		if ( abs( MAX(distance_01, distance_12) / MIN(distance_01, distance_12) - 121.0/36.0 ) > 0.8 ) return false;
-
-		if ( distance_01 > distance_12)
-			somme_mat_3x3(H_en_vigueur, getPerspectiveTransform(carte, dimensions_fleur ));
+		if ( aire_nouvelle < AIRE(plages[i], plages[i+1], plages[i+2], plages[i+3]))
+		{
+			milieu = intersection_segment(carte[0], carte[2], carte[1], carte[3]);
+			if (DETERMINANT(plages[i  ], milieu, milieu, plages[i+1]) > 0 xor DETERMINANT(plages[i+2], milieu, milieu, plages[i+3]) > 0) continue;
+			if (DETERMINANT(plages[i+1], milieu, milieu, plages[i+2]) > 0 xor DETERMINANT(plages[i+3], milieu, milieu, plages[i  ]) > 0) continue;
+			return false;
+		}
 		else
-			somme_mat_3x3(H_en_vigueur, getPerspectiveTransform(carte, dimensions_choux ));
-	}
-	else
-	{
-		if ( 	MAX(MIN(carte[0].y, carte[1].y), MIN(carte[2].y, carte[3].y)) >
-				MAX(MIN(carte[2].y, carte[1].y), MIN(carte[0].y, carte[3].y)) )
-			H_en_vigueur = getPerspectiveTransform(carte, dimensions_choux );
-		else
-			H_en_vigueur = getPerspectiveTransform(carte, dimensions_fleur );
+		{
+			milieu = intersection_segment(plages[i], plages[i+2], plages[i+1], plages[i+3]);
+			if (DETERMINANT(carte[0], milieu, milieu, carte[1]) > 0 xor DETERMINANT(carte[2], milieu, milieu, carte[3]) > 0) continue;
+			if (DETERMINANT(carte[1], milieu, milieu, carte[2]) > 0 xor DETERMINANT(carte[3], milieu, milieu, carte[0]) > 0) continue;
+			return false;
+		}
 	}
 
-	plages.push_back( new Point2f[4] );
-	plages.back()[0] = carte[0];
-	plages.back()[1] = carte[1];
-	plages.back()[2] = carte[2];
-	plages.back()[3] = carte[3];
+	plages.push_back(carte[0]);
+	plages.push_back(carte[1]);
+	plages.push_back(carte[2]);
+	plages.push_back(carte[3]);
 
 	return true;
 }
 
-Plage_cartes::~Plage_cartes()
+extern Mat image;
+extern ofstream fichier;
+
+void Plage_cartes::toutes(vector<Mat>& les_cartes) const
 {
-	for (int i = 0; i < plages.size() ; i++)	delete[] plages[i];
+	les_cartes.clear();
+	for (int i = 0; i < plages.size(); i+=4)
+		les_cartes.push_back(extraire_carte(i));
+}
+
+Mat Plage_cartes::la_plus_grande()
+{
+	if (plages.empty()) return Mat();
+	int indice_max;
+	float aire_max = 0; float aire_temp;
+	for (int i = 0; i < plages.size(); i+=4)
+	{
+		if ( (aire_temp = AIRE(plages[i], plages[i+1], plages[i+2], plages[i+3])) > aire_max )
+		{
+			aire_max = aire_temp;
+			indice_max = i;
+		}
+	}
+	Mat toto = extraire_carte(indice_max);
+	plages.erase(plages.begin()+indice_max, plages.begin()+indice_max+4);
+	return toto;
+}
+
+void Plage_cartes::multiplier_plage(float facteur)
+{
+	for (int i = 0; i < plages.size(); i++)
+	{
+		plages[i] = Point2f(plages[i].x * facteur, plages[i].y * facteur);
+	}
+}
+
+// découpe une carte d'une image, étant donnée ses quatre sommets.
+
+Mat Plage_cartes::extraire_carte(int indice) const
+{
+	Mat homo;
+	if (indice >= plages.size()) return homo;
+	vector<Point2f> rectangle2f(plages.data() + indice, plages.data() + indice + 4);
+
+	bool sens_rotation = DETERMINANT(rectangle2f[0], rectangle2f[1], rectangle2f[1], rectangle2f[2]) > 0;
+
+	float min_choux = MIN(DISTANCE(rectangle2f[0], rectangle2f[1]), DISTANCE(rectangle2f[2], rectangle2f[3]));
+	float min_fleur = MIN(DISTANCE(rectangle2f[2], rectangle2f[1]), DISTANCE(rectangle2f[0], rectangle2f[3]));
+
+	if ( min_choux * 1.3 < min_fleur or ( min_fleur * 1.3 > min_choux and
+				MAX(MIN(rectangle2f[0].y, rectangle2f[1].y), MIN(rectangle2f[2].y, rectangle2f[3].y)) >
+				MAX(MIN(rectangle2f[2].y, rectangle2f[1].y), MIN(rectangle2f[0].y, rectangle2f[3].y))) )
+	{
+		if (sens_rotation)
+			homo = getPerspectiveTransform(rectangle2f, dimensions_choux);
+		else
+			homo = getPerspectiveTransform(rectangle2f, dimensions_xuohc);
+	}
+	else
+	{
+		if (sens_rotation)
+			homo = getPerspectiveTransform(rectangle2f, dimensions_fleur);
+		else
+			homo = getPerspectiveTransform(rectangle2f, dimensions_ruelf);
+	}
+
+	Mat carte_bis(300,550, CV_8UC3);
+	warpPerspective(image, carte_bis, homo, Size(300, 550));
+	return carte_bis;
+}
+
+extern Plage_cartes homographie;
+extern float sous_echantillon_isolation;
+extern float sous_echantillon_reconnaissance;
+extern string chemin_carte;
+extern bool mode_demi_image;
+
+// affichage interactif des cartes détectées.
+
+void Plage_cartes::sauver_images() const
+{
+	int compteur = 0, compteur_liste = -1;
+	Mat une_carte;
+
+	image = imread(chemin_carte,1);
+	if (mode_demi_image) image = image(Range(image.rows*3/5, image.rows),Range::all());
+	resize(image, image, Size(), sous_echantillon_reconnaissance, sous_echantillon_reconnaissance);
+	homographie.multiplier_plage(sous_echantillon_reconnaissance / sous_echantillon_isolation);
+
+	while ( not (une_carte = homographie.la_plus_grande()).empty())
+	{
+		compteur++;
+		imshow("drawing", une_carte);
+		stringstream ss;
+		if ( waitKey(0) == 115 )
+		{
+				ss << "/tmp/image " << compteur << ".png";
+				imwrite(ss.str(), une_carte);
+		}
+	}
 }
 
 float somme_cube(Mat& histo, int i)

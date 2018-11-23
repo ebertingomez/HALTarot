@@ -1,13 +1,14 @@
 
-int epsilon_approx_poly					= 10;
-
+float sous_echantillon_isolation		= 0.35;
+float sous_echantillon_reconnaissance	= 0.85;
 /*
  *
  * détection de segments
  *
  */
 
-int taille_minimale_segment				= 2300;
+float taille_minimale_segment			= 0.002;
+float correction_saturation				= 2;
 
 
 /*
@@ -16,5 +17,18 @@ int taille_minimale_segment				= 2300;
  *
  */
 
-float plafond_note_distance				= 1200;
+
+int tolerance_ecart						= 1000;
+float plafond_note_distance				= 35000;
 float intolerance_angle					= 350;
+
+
+
+/*
+ *
+ * reconnaissance
+ *
+ */
+
+int plafond_ressemblance_couleur		= 4000;
+

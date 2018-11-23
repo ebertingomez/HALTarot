@@ -1,19 +1,12 @@
 #include "Cache.hpp"
 #include "Algorithme_surf.hpp"
 
-extern string chemin_absolu;
 
-char* toto;
-
-
-Cache::Cache(bool modif):modif(modif), fichier_couleur(0), neurones_carte(ANN_MLP::load("données/neurones carte")), neurones_coin(ANN_MLP::load("données/neurones coin"))
+Cache::Cache(bool modif):modif(modif), fichier_couleur(0)
 {
-    toto = (char*)malloc(100);
-    for(int i = 0 ; i < chemin_absolu.size() ; i++) toto[i] = chemin_absolu[i];
-
-    fichier_carac   = fopen(strcat(toto, "points caractéristiques"),modif ? "wb+" : "rb");
-	fichier_desc    = fopen(strcat(toto, "descripteurs"),modif ? "wb+" : "rb");
-	fichier_liste   = fopen(strcat(toto, "liste"),modif ? "w+" : "r");
+	fichier_carac   = fopen("data/points_caractéristiques",modif ? "wb+" : "rb");
+	fichier_desc    = fopen("data/descripteurs",modif ? "wb+" : "rb");
+	fichier_liste   = fopen("data/liste",modif ? "w+" : "r");
 }
 
 bool Cache::verification_acces()
@@ -44,27 +37,20 @@ Cache::~Cache()
 	if ( fichier_couleur!= NULL )	fclose(fichier_couleur);
 }
 
-void Cache::insertion_points(KeyPoint* points, int occurence)
+void Cache::insertion_points(KeyPoint* points_carac, int occurences)
 {
-	fwrite(points, sizeof(KeyPoint), occurence, fichier_carac);
+	fwrite(points_carac, sizeof(KeyPoint), occurences, fichier_carac);
 }
 
-void Cache::insertion_desc(Mat const& desc)
+void Cache::insertion_desc(Mat* desc)
 {
-	for ( int i = 0 ; i < desc.rows ; i ++ )
-		fwrite(desc.ptr<float>(i), sizeof(float), 64, fichier_desc);
+	for ( int i = 0 ; i < desc->rows ; i ++ )
+		fwrite(desc->ptr<float>(i), sizeof(float), 64, fichier_desc);
 }
 
-char str_to_int(string const& str)
+void Cache::attribuer_teinte(vector<Algorithme_surf*>& paquet)
 {
-    char nombre = 0;
-    for ( int i = 0 ; i < str.length() ; i ++ ) nombre = nombre * 10 + str[i] - '0';
-    return nombre;
-}
-
-void Cache::attribuer_teinte(vector<Algorithme_surf*> paquet)
-{
-	if ( not fichier_couleur ) fichier_couleur = fopen(strcat(toto, + "couleurs"), "r");
+	if ( not fichier_couleur ) fichier_couleur = fopen("data/couleurs", "r");
 	int liste_teinte[22][20];
 	char code_toto[3];
 	for ( int i = 0 ; i < 22 ; i ++ )
@@ -78,7 +64,12 @@ void Cache::attribuer_teinte(vector<Algorithme_surf*> paquet)
 	for ( int i = 0 ; i < paquet.size() ; i ++ )
 	{
 		if ( classification(paquet[i]->getCode()) == ATOUT )
-			paquet[i]->setTeinte(liste_teinte[str_to_int(paquet[i]->getCode())]);
+		{
+			int nombre = 0;
+			if (paquet[i]->getCode()[0] == '1') nombre = 10;
+			nombre += paquet[i]->getCode()[1] - '0';
+			paquet[i]->setTeinte(liste_teinte[nombre]);
+		}
 		if ( classification(paquet[i]->getCode()) == EXCUSE )
 			paquet[i]->setTeinte(liste_teinte[0]);
 	}
@@ -87,7 +78,7 @@ void Cache::attribuer_teinte(vector<Algorithme_surf*> paquet)
 #ifdef CACHE_HISTO
 void Cache::insertion_couleur(string code, int* teinte)
 {
-	if ( not fichier_couleur ) fichier_couleur = fopen(strcat(toto,  "couleurs"), "w");
+	if ( not fichier_couleur ) fichier_couleur = fopen(("data/couleurs").c_str(), "w");
 	fprintf(fichier_couleur, "%s ", code.c_str());
 	for ( int i = 0 ; i < 20 ; i ++ ) fprintf(fichier_couleur, "%d ", teinte[i]);
 	fprintf(fichier_couleur, "\n");
@@ -121,10 +112,10 @@ void Cache::remplir(vector<Point>& liste, int taille)
 
 bool Cache::charge_couleurs()
 {
-	pique		= imread(chemin_absolu + "pique.png",	0);
-	carreau		= imread(chemin_absolu + "carreau.png",	0);
-	coeur		= imread(chemin_absolu + "coeur.png",	0);
-	pissenlit	= imread(chemin_absolu + "trèfle.png",	0);
+	pique		= imread("data/pique.png",	0);
+	carreau		= imread("data/carreau.png",	0);
+	coeur		= imread("data/coeur.png",	0);
+	pissenlit	= imread("data/trèfle.png",	0);
 	return pique.data && coeur.data && carreau.data && pissenlit.data;
 }
 

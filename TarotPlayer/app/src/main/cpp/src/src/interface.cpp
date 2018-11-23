@@ -1,26 +1,63 @@
 #include "Carte.hpp"
-#include "Cache.hpp"
+#include "Isolation.hpp"
 
-void cartes_chien(string path)
-{
-    Carte paquet;
-    ofstream fichier("chien.txt");
-	fichier << paquet.analyse(path) << endl;
-	fichier.close();
-}
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <signal.h>
 
-void cartes_IA(string path)
-{
-    Carte paquet;
-	ofstream fichier("chien.txt");
-	fichier << paquet.analyse(path) << endl;
-	fichier.close();
-}
+using namespace std;
+using namespace cv;
 
-void cartes_table(string path, int nombre)
+extern Carte* paquet_carte;
+Point2f* points;
+extern Plage_cartes homographie;
+string chemin_carte;
+
+bool mode_test, mode_demi_image;
+extern float sous_echantillon_isolation;
+extern float sous_echantillon_reconnaissance;
+extern Mat image;
+
+int main (int argc, char** argv)
 {
-    Carte paquet;
-	ofstream fichier("chien.txt");
-	fichier << paquet.analyse(path) << endl;
-	fichier.close();
+	points = new Point2f[4];
+	mode_demi_image = false;
+
+	if ( string(argv[1]) == "touche")
+	{
+		imshow("lkjbé", Mat(5,5, CV_8U));
+		cout << waitKey(0) << endl;
+	}
+
+	chemin_carte = string(argv[2]);
+
+	if ( string(argv[1]) == "cherche" )
+	{
+		paquet_carte = new Carte();
+		cout << "------------>  " << paquet_carte->analyse(argv[2]) << endl;
+		delete paquet_carte;
+	}
+	else if ( string(argv[1]) == "table" )
+	{
+		isolation_dijkstra(string(argv[2]));
+		homographie.sauver_images();
+	}
+	else if ( string(argv[1]) == "demi_table" )
+	{
+		mode_demi_image = true;
+		isolation_dijkstra(string(argv[2]));
+		homographie.sauver_images();
+	}
+	else if ( string(argv[1]) == "découpe" )
+	{
+		string fichier(argv[2]);
+		isolation_rectangle(fichier);
+
+		homographie.sauver_images();
+	}
+
+	delete[] points;
+	return 0;
 }
