@@ -104,6 +104,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    /**
+     * Creation of all the files needed to run the application. The files for the image recognition
+     * the ones which will contain the game status
+     */
     private void initFiles() {
         createFile(MainActivity.AI_CARDS_PATH);
         createFile(Game.GAME_FILE_NAME);
@@ -122,21 +126,21 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         createFileFromAssets("trefle.png");
     }
 
+    /**
+     * Initialization of all the assets stored on the application
+     * @param asset The name of the asset to generate
+     */
     private void createFileFromAssets(String asset) {
-        OutputStream outputStream = null;
+        OutputStream os = null;
         InputStream is = null;
         AssetManager mngr= this.getAssets();
         try {
             is = mngr.open(asset);
-
-            outputStream =
-                    new FileOutputStream(new File(MainActivity.MAIN_PATH+"/"+asset));
-
+            os =  new FileOutputStream(new File(MainActivity.MAIN_PATH+"/"+asset));
             int read = 0;
             byte[] bytes = new byte[1024];
-
             while ((read = is.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, read);
+                os.write(bytes, 0, read);
             }
 
         } catch (IOException e) {
@@ -150,14 +154,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                     e.printStackTrace();
                 }
             }
-            if (outputStream != null) {
+            if (os != null) {
                 try {
-                    // outputStream.flush();
-                    outputStream.close();
+                    os.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
         }
     }

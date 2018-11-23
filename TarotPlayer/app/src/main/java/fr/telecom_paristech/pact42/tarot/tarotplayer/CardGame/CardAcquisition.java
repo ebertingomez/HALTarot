@@ -25,11 +25,6 @@ import fr.telecom_paristech.pact42.tarot.tarotplayer.Divers.PhotoDegueuException
  */
 public class CardAcquisition {
     /**
-     * Number of pictures analyzed by the application
-     */
-    private static int cmpt = 0;
-
-    /**
      * Loading the native Library on C++ to use openCV
      */
     static {
@@ -84,6 +79,7 @@ public class CardAcquisition {
      * @see android.hardware.Camera
      * @see android.hardware.Camera#takePicture(Camera.ShutterCallback, Camera.PictureCallback, Camera.PictureCallback)
      */
+    //TODO Use Camera2
     public static void takePicture(android.hardware.Camera camera) {
         SurfaceTexture surfaceTexture = new SurfaceTexture(10);
         try {
@@ -155,7 +151,6 @@ public class CardAcquisition {
      *      THe valeur of the card
      */
     private static String analyse(String path) {
-        cmpt++;
         return analyzeFromJNI(path);
     }
 
@@ -165,15 +160,4 @@ public class CardAcquisition {
      * if what kind of card it is.
      */
     public native static String analyzeFromJNI(String path);
-
-
-
-    /**
-     * This method is used to set (or reset) the value of the recognised cards counter
-     * @param cmpt
-     *      The new value of the number of card scanned.
-     */
-    public static void setCmpt(int cmpt) {
-        CardAcquisition.cmpt = cmpt;
-    }
 }

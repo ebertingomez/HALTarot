@@ -46,20 +46,29 @@
       <file leaf-file-name="Algorithme_surf.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/cpp/src/src/Algorithme_surf.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" selection-start-line="15" selection-end-line="15" />
+            <state relative-caret-position="255">
+              <caret line="17" selection-start-line="17" selection-end-line="17" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="native-lib.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="native-lib.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/cpp/src/native-lib.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" selection-start-line="12" selection-end-line="12" />
+            <state relative-caret-position="225">
+              <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
               <folding>
                 <element signature="e#0#16#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlayerActivity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/telecom_paristech/pact42/tarot/tarotplayer/Activities/PlayerActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="475">
+              <caret line="155" column="13" lean-forward="true" selection-start-line="155" selection-start-column="13" selection-end-line="155" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -79,7 +88,7 @@
       <file leaf-file-name="Algorithme_surf.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/cpp/src/include/Algorithme_surf.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="148">
+            <state relative-caret-position="150">
               <caret line="10" selection-start-line="10" selection-end-line="10" />
               <folding>
                 <element signature="e#33#53#0" expanded="true" />
@@ -91,8 +100,8 @@
       <file leaf-file-name="Carte.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/cpp/src/src/Carte.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="43" selection-start-line="43" selection-end-line="43" />
+            <state relative-caret-position="138">
+              <caret line="114" selection-start-line="114" selection-end-line="114" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -2429,16 +2438,16 @@
         <option value="$PROJECT_DIR$/app/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/app/src/main/java/fr/telecom_paristech/pact42/tarot/tarotplayer/Activities/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/fr/telecom_paristech/pact42/tarot/tarotplayer/Activities/ScoresActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/fr/telecom_paristech/pact42/tarot/tarotplayer/CardGame/CardAcquisition.java" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/src/include/Algorithme_surf.hpp" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/src/src/Isolation.cpp" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/src/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/src/src/interface.cpp" />
-        <option value="$PROJECT_DIR$/app/src/main/java/fr/telecom_paristech/pact42/tarot/tarotplayer/Activities/PlayerActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/src/src/Cache.cpp" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/src/native-lib.cpp" />
         <option value="$PROJECT_DIR$/app/src/main/cpp/src/src/Carte.cpp" />
+        <option value="$PROJECT_DIR$/app/src/main/java/fr/telecom_paristech/pact42/tarot/tarotplayer/CardGame/CardAcquisition.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/fr/telecom_paristech/pact42/tarot/tarotplayer/Activities/PlayerActivity.java" />
       </list>
     </option>
   </component>
@@ -2465,25 +2474,12 @@
             <path>
               <item name="TarotPlayer" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-            </path>
-            <path>
-              <item name="TarotPlayer" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="tarotplayer" type="cbb59c9e:AndroidPsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="TarotPlayer" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="tarotplayer" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="Activities" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="TarotPlayer" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="cpp" type="9a30073f:AndroidJniFolderNode" />
+            </path>
+            <path>
+              <item name="TarotPlayer" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
             </path>
             <path>
               <item name="TarotPlayer" type="1abcf292:AndroidViewProjectNode" />
@@ -2493,7 +2489,32 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <expand>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="app" type="cbb8eebc:String" user="app" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="TarotPlayer" type="cbb8eebc:String" user="TarotPlayer" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="TarotPlayer" type="cbb8eebc:String" user="TarotPlayer" />
+              <item name="TarotPlayer" type="cbb8eebc:String" user="TarotPlayer" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="TarotPlayer" type="cbb8eebc:String" user="TarotPlayer" />
+              <item name="TarotPlayer" type="cbb8eebc:String" user="TarotPlayer" />
+              <item name="build/intermediates/lint-cache" type="cbb8eebc:String" user="build/intermediates/lint-cache" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -2691,14 +2712,14 @@
       <window_info id="Captures" order="2" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4969697" visible="true" weight="0.22961374" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4969697" visible="true" weight="0.22961374" />
       <window_info anchor="bottom" id="Build" order="7" weight="0.43030304" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32969698" />
       <window_info anchor="right" id="Gradle" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Device File Explorer" order="3" side_tool="true" visible="true" weight="0.0" />
       <window_info anchor="right" id="Theme Preview" order="3" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.4985694" visible="true" weight="0.4" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4985694" visible="true" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info id="Designer" order="2" />
@@ -2955,9 +2976,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="15" column="8" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="8" />
-          <folding>
-            <element signature="e#43#63#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2980,11 +2998,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/cpp/src/include/annexe.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#37#57#0" expanded="true" />
-          </folding>
-        </state>
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/sdk/native/jni/include/opencv2/core.hpp">
@@ -2998,16 +3012,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/telecom_paristech/pact42/tarot/tarotplayer/CardGame/CardAcquisition.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="157" selection-start-line="157" selection-end-line="157" />
-          <folding>
-            <element signature="method#openFrontalCamera#0;class#CardAcquisition#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3034,9 +3038,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-83">
           <caret line="10" column="19" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3047,11 +3048,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/cpp/src/src/comm.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/cpp/src/src/annexe.cpp">
@@ -3059,28 +3056,10 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/telecom_paristech/pact42/tarot/tarotplayer/Activities/PlayerActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="128" column="13" selection-start-line="128" selection-start-column="13" selection-end-line="128" selection-end-column="13" />
-          <folding>
-            <element signature="docComment;field#playerName1#0;class#PlayerActivity#0" />
-            <element signature="docComment;field#playerName2#0;class#PlayerActivity#0" />
-            <element signature="docComment;field#playerName3#0;class#PlayerActivity#0" />
-            <element signature="docComment;field#currentGame#0;class#PlayerActivity#0" />
-            <element signature="docComment;method#onCreate#0;class#PlayerActivity#0" />
-            <element signature="docComment;method#setPlayers#0;class#PlayerActivity#0" />
-            <element signature="docComment;method#getPlayerName1#0;class#PlayerActivity#0" />
-            <element signature="docComment;method#getPlayerName2#0;class#PlayerActivity#0" />
-            <element signature="docComment;method#getPlayerName3#0;class#PlayerActivity#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/cpp/src/src/Algorithme_surf.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        <state relative-caret-position="255">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
         </state>
       </provider>
     </entry>
@@ -3113,7 +3092,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/cpp/src/include/Algorithme_surf.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
+        <state relative-caret-position="150">
           <caret line="10" selection-start-line="10" selection-end-line="10" />
           <folding>
             <element signature="e#33#53#0" expanded="true" />
@@ -3123,8 +3102,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/cpp/src/src/Carte.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="43" selection-start-line="43" selection-end-line="43" />
+        <state relative-caret-position="138">
+          <caret line="114" selection-start-line="114" selection-end-line="114" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
@@ -3133,11 +3112,33 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/cpp/src/native-lib.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        <state relative-caret-position="225">
+          <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
           <folding>
             <element signature="e#0#16#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/telecom_paristech/pact42/tarot/tarotplayer/CardGame/CardAcquisition.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1725">
+          <caret line="153" selection-start-line="153" selection-end-line="153" />
+          <folding>
+            <element signature="e#0#6275#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="method#takePicture#0;class#CardAcquisition#0" />
+            <element signature="e#3328#4145#0" expanded="true" />
+            <element signature="e#4144#4145#0" expanded="true" />
+            <element signature="e#5619#5620#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/fr/telecom_paristech/pact42/tarot/tarotplayer/Activities/PlayerActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="155" column="13" lean-forward="true" selection-start-line="155" selection-start-column="13" selection-end-line="155" selection-end-column="13" />
         </state>
       </provider>
     </entry>
