@@ -11,7 +11,7 @@ string name;
 Cache::Cache(bool modif):modif(modif), fichier_couleur(0)
 {
 	
-    name = chemin_absolu+"pointscaracteristiques";
+    name = chemin_absolu+"points_caracteristiques";
     fichier_carac   = fopen(name.c_str(),modif ? "wb+" : "rb");
     name = chemin_absolu+"descripteurs";
     fichier_desc    = fopen(name.c_str(),modif ? "wb+" : "rb");

@@ -134,7 +134,10 @@ string Carte::analyse(Algorithme_surf& image)							// reconnaissance d'une cart
 long norme_euclidienne(int* x1, int* x2)
 {
 	long norme = 0;
-	for ( int i = 0 ; i < 20 ; i ++ ) norme += (x1[i]-x2[i])*(x1[i]-x2[i]);
+	for ( int i = 0 ; i < 20 ; i ++ ){
+	    norme += (x1[i]-x2[i])*(x1[i]-x2[i]);
+	}
+    return norme;
 }
 
 string Carte::analyse_SURF(Algorithme_surf banane, Classification couleur)

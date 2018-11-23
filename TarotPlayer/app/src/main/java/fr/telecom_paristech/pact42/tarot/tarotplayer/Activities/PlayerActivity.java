@@ -110,17 +110,15 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         createFile(Game.BID_FILE_NAME);
         createFile(Game.CHIEN_FILE_NAME);
 
-        createFileFromAssets("arbrecouleurcarte");
-        createFileFromAssets("arbrecouleurcoin");
-        createFileFromAssets("arbretypecarte");
-        createFileFromAssets("arbretypecoin");
+        createFileFromAssets("arbre_couleur_carte");
+        createFileFromAssets("arbre_type_carte");
         createFileFromAssets("carreau.png");
         createFileFromAssets("coeur.png");
         createFileFromAssets("couleurs");
         createFileFromAssets("descripteurs");
         createFileFromAssets("liste");
         createFileFromAssets("pique.png");
-        createFileFromAssets("pointscaracteristiques");
+        createFileFromAssets("points_caracteristiques");
         createFileFromAssets("trefle.png");
     }
 
