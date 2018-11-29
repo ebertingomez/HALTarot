@@ -70,6 +70,8 @@ public class PlayerIddleActivity extends AppCompatActivity implements View.OnCli
         try {
             if (counter == 0) {
                 reference = Game.play();
+                //PlayerIddleActivity.IAplays = reference==1 ? true : false;
+                //PlayerIddleActivity.lastReferenceValue = reference;
             }
             if (IAplays) {
                 PlayerIddleActivity.IAplays = false;
@@ -133,6 +135,7 @@ public class PlayerIddleActivity extends AppCompatActivity implements View.OnCli
                 startActivity(scanTableActivity);
                 break;
             } else {
+                counter = 0;
                 Intent scoresActivity = new Intent(PlayerIddleActivity.this, ScoresActivity.class);
                 scoresActivity.putExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME",
                         currentGame);
@@ -153,7 +156,7 @@ public class PlayerIddleActivity extends AppCompatActivity implements View.OnCli
      *      The card to play decided by the AI.
      */
     public String getCard() {
-        String last = "1A", line;
+        String last=null, line;
         try {
             BufferedReader input = new BufferedReader(new FileReader(pathGame));
             while ((line = input.readLine()) != null) {

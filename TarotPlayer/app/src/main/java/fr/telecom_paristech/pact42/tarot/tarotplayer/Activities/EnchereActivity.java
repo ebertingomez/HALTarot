@@ -220,9 +220,9 @@ public class EnchereActivity extends AppCompatActivity implements View.OnClickLi
      *    @see EnchereLibrary#enchereTable
      */
     private int getMyEnchere() {
-        String line, last = "PA";
+        String line, last = null;
         try {
-            int i = Game.bid();
+            Game.bid();
             BufferedReader input = new BufferedReader(new FileReader(pathEncheres));
 
             while ((line = input.readLine()) != null) {
@@ -232,7 +232,6 @@ public class EnchereActivity extends AppCompatActivity implements View.OnClickLi
         } catch (Exception e) {
             e.printStackTrace();
         }
-        last = "GA"; //Only to test ChangeChien
         EnchereActivity.myEnchere = last;
         return EnchereLibrary.enchereTable.get(last);
     }

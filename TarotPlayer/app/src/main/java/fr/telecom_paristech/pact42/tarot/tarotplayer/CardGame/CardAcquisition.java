@@ -24,6 +24,7 @@ import fr.telecom_paristech.pact42.tarot.tarotplayer.Divers.PhotoDegueuException
  *  @see android.hardware.Camera
  */
 public class CardAcquisition {
+    private static int tempcounter = 1;
     /**
      * Loading the native Library on C++ to use openCV
      */
@@ -40,7 +41,7 @@ public class CardAcquisition {
      * @see TarotCardLibrary#cards
      */
     public static String cardRecognitionHand() throws PhotoDegueuException {
-        String res = "!!";
+        String res;
         String path = MainActivity.MAIN_PATH;
         res = analyse(path);
         res = res.toUpperCase();
@@ -151,7 +152,7 @@ public class CardAcquisition {
      *      THe valeur of the card
      */
     private static String analyse(String path) {
-        return analyzeFromJNI(path);
+        return Integer.toString(tempcounter++)+"P"; //analyzeFromJNI(path);
     }
 
     /**
