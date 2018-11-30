@@ -152,7 +152,8 @@ public class CardAcquisition {
      *      THe valeur of the card
      */
     private static String analyse(String path) {
-        return Integer.toString(tempcounter++)+"P"; //analyzeFromJNI(path);
+        return analyzeFromJNI(path);
+        //return Integer.toString(tempcounter++)+"P";
     }
 
     /**

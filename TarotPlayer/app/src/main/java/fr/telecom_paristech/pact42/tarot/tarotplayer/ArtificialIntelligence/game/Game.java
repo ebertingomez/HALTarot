@@ -295,6 +295,9 @@ public class Game {
 		game = null;
 	}
 
+	public static double getTakerPoints(){return game.plisPreneur.getScore()/2.;}
+	public static double getOthersPoints(){return game.plisAdverses.getScore()/2.;}
+
 	public void addPlayedCardGame(Card carte) throws IOException {
 		gameCardFile.addCard(carte);
 	}

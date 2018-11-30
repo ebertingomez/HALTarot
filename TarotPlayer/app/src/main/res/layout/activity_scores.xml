@@ -39,74 +39,23 @@
             android:textStyle="bold"
             android:textSize="40sp" />
 
-        <TableLayout
-            android:layout_width="350dp"
+        <TextView
+            android:id="@+id/scoreLoserMessage"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:gravity="start"
+            android:textColor="#FFFFFF"
+            android:textSize="40sp"
+            android:textStyle="bold" />
 
-            <TableRow>
-                <TextView
-                    android:id="@+id/scorePlayerName2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:textColor="#FFFFFF"
-                    android:textSize="40sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/scorePlayerScore2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:textColor="#FFFFFF"
-                    android:textSize="40sp"
-                    android:textStyle="bold" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/scorePlayerName3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:textColor="#FFFFFF"
-                    android:textSize="40sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/scorePlayerScore3"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:textColor="#FFFFFF"
-                    android:textSize="40sp"
-                    android:textStyle="bold" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/scorePlayerName4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:textColor="#FFFFFF"
-                    android:textSize="40sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/scorePlayerScore4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:textColor="#FFFFFF"
-                    android:textSize="40sp"
-                    android:textStyle="bold" />
-            </TableRow>
-        </TableLayout>
+        <TextView
+            android:id="@+id/scoreLoserScore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textColor="#FFFFFF"
+            android:textSize="40sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/scoreWinningSymbol"

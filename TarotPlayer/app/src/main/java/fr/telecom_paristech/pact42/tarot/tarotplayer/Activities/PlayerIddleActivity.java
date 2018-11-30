@@ -32,22 +32,13 @@ public class PlayerIddleActivity extends AppCompatActivity implements View.OnCli
      */
     private TarotGame currentGame;
     /**
-     * Variable which counts the turns which passed.
-     */
-    private static int counter = 0;
-    /**
      *  The path of the file where all the played cards are stored.
      */
     private String pathGame = Game.GAME_FILE_NAME;
     /**
-     * Used to determine if it is the turn of the IA, the others players' turn, or if the game concluded
-     * @see Game#play()
-     */
-    private int reference;
-    /**
      * Used to determine if the IA has to play.
      */
-    private static boolean IAplays;
+    private static boolean IAplayed=false;
     /**
      * Used to stored the last value of the reference when the AI has to play.
      */
@@ -68,16 +59,11 @@ public class PlayerIddleActivity extends AppCompatActivity implements View.OnCli
         button.setOnClickListener(this);
         info.setOnClickListener(this);
         try {
-            if (counter == 0) {
-                reference = Game.play();
-                //PlayerIddleActivity.IAplays = reference==1 ? true : false;
-                //PlayerIddleActivity.lastReferenceValue = reference;
+            if (IAplayed) {
+                IAplayed = false;
             }
-            if (IAplays) {
-                PlayerIddleActivity.IAplays = false;
-                reference = PlayerIddleActivity.lastReferenceValue;
-            } else {
-                reference = Game.play();
+            else {
+                lastReferenceValue = Game.play();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,45 +94,43 @@ public class PlayerIddleActivity extends AppCompatActivity implements View.OnCli
      */
     @Override
     public void onClick(View view) {
-        PlayerIddleActivity.counter++;
         int id = view.getId();
         switch (id) {
-        case R.id.nextPlayer:
-            if (reference == 1) {
-                PlayerIddleActivity.IAplays = true;
-                try {
-                    PlayerIddleActivity.lastReferenceValue = Game.play();
-                } catch (Exception e) {
-                    e.printStackTrace();
+            case R.id.nextPlayer:
+                if (lastReferenceValue == Game.AI_PLAYER) {
+                    IAplayed = true;
+                    try {
+                        lastReferenceValue = Game.play();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    String card2Play = getCard();
+                    currentGame.addPlayedCard(card2Play);
+                    Intent cardDecisionActivity = new Intent(PlayerIddleActivity.this, CardDecisionActivity.class);
+                    cardDecisionActivity.putExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME",
+                            currentGame);
+                    cardDecisionActivity.putExtra("card2Play", card2Play);
+                    startActivity(cardDecisionActivity);
+                    break;
+                } else if (lastReferenceValue == Game.REAL_PLAYER) {
+                    ScanTableActivity.setCardsScanned(0);
+                    Intent scanTableActivity = new Intent(PlayerIddleActivity.this, ScanTableActivity.class);
+                    scanTableActivity.putExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME",
+                            currentGame);
+                    startActivity(scanTableActivity);
+                    break;
+                } else {
+                    Intent scoresActivity = new Intent(PlayerIddleActivity.this, ScoresActivity.class);
+                    scoresActivity.putExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME",
+                            currentGame);
+                    startActivity(scoresActivity);
+                    break;
                 }
-                String card2Play = getCard();
-                currentGame.addPlayedCard(card2Play);
-                Intent cardDecisionActivity = new Intent(PlayerIddleActivity.this, CardDecisionActivity.class);
-                cardDecisionActivity.putExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME",
-                        currentGame);
-                cardDecisionActivity.putExtra("card2Play", card2Play);
-                startActivity(cardDecisionActivity);
+            case R.id.information:
+                String message = "Click on the button to validate the played card";
+                InformationDialog infoBox = new InformationDialog(this, message);
+                infoBox.show();
                 break;
-            } else if (reference == 2) {
-                ScanTableActivity.setCardsScanned(0);
-                Intent scanTableActivity = new Intent(PlayerIddleActivity.this, ScanTableActivity.class);
-                scanTableActivity.putExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME",
-                        currentGame);
-                startActivity(scanTableActivity);
-                break;
-            } else {
-                counter = 0;
-                Intent scoresActivity = new Intent(PlayerIddleActivity.this, ScoresActivity.class);
-                scoresActivity.putExtra("fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TAROTGAME",
-                        currentGame);
-                startActivity(scoresActivity);
-                break;
-            }
-        case R.id.information:
-            String message = "Click on the button to validate the played card";
-            InformationDialog infoBox = new InformationDialog(this, message);
-            infoBox.show();
-            break;
         }
     }
 

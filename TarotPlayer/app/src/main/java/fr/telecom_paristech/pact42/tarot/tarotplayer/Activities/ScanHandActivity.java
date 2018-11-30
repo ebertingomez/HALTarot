@@ -60,7 +60,7 @@ public class ScanHandActivity extends AppCompatActivity {
 
         TextView cardNumber = findViewById(R.id.scannedCards);
         cardNumber.setText(String.valueOf(cardsScanned));
-        if (cardsScanned < 3) {
+        if (cardsScanned < 18) {
             android.hardware.Camera camera = CardAcquisition.openFrontalCamera();
             CardAcquisition.takePicture(camera);
             Handler handlerbis = new Handler();

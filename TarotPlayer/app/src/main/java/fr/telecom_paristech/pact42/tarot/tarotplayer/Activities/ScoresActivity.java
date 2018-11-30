@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import fr.telecom_paristech.pact42.tarot.tarotplayer.ArtificialIntelligence.game.Game;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TarotGame;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.R;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.Widgets.InformationDialog;
@@ -54,25 +55,23 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        TextView player1 = findViewById(R.id.scoreWinnerMessage);
-        TextView player1Score = findViewById(R.id.scoreWinnerScore);
-        TextView player2 = findViewById(R.id.scorePlayerName2);
-        TextView player2Score = findViewById(R.id.scorePlayerScore2);
-        TextView player3 = findViewById(R.id.scorePlayerName3);
-        TextView player3Score = findViewById(R.id.scorePlayerScore3);
-        TextView player4 = findViewById(R.id.scorePlayerName4);
-        TextView player4Score = findViewById(R.id.scorePlayerScore4);
+        TextView winner = findViewById(R.id.scoreWinnerMessage);
+        TextView winnerScore = findViewById(R.id.scoreWinnerScore);
+        TextView loser = findViewById(R.id.scoreLoserMessage);
+        TextView loserScore = findViewById(R.id.scoreLoserScore);
 
-        player1.setText(get1Place());
-        player2.setText(get2Place());
-        player3.setText(get3Place());
-        player4.setText(get4Place());
-
-        player1Score.setText(get1PlaceScore());
-        player2Score.setText(get2PlaceScore());
-        player3Score.setText(get3PlaceScore());
-        player4Score.setText(get4PlaceScore());
-
+        if (Game.getTakerPoints()>Game.getOthersPoints()){
+            winner.setText("Taker");
+            loser.setText("Others");
+            winnerScore.setText(Double.toString(Game.getTakerPoints()));
+            loserScore.setText(Double.toString(Game.getOthersPoints()));
+        }
+        else {
+            winner.setText("Others");
+            loser.setText("Taker");
+            winnerScore.setText(Double.toString(Game.getOthersPoints()));
+            loserScore.setText(Double.toString(Game.getTakerPoints()));
+        }
     }
     /**
      * Called when a view has been clicked. It is used to distinguish if the user asks for information or if he wants to start
@@ -96,70 +95,5 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
             infoBox.show();
             break;
         }
-    }
-
-    /**
-     * Getter of the first place player
-     * @return
-     *      The name of the first place player.
-     */
-    public String get1Place() {
-        return "AI";
-    }
-    /**
-     * Getter of the second place player
-     * @return
-     *      The name of the second place player.
-     */
-    public String get2Place() {
-        return currentGame.getPlayerList().get(0);
-    }
-    /**
-     * Getter of the third place player
-     * @return
-     *      The name of the third place player.
-     */
-    public String get3Place() {
-        return currentGame.getPlayerList().get(1);
-    }
-    /**
-     * Getter of the fourth place player
-     * @return
-     *      The name of the fourth place player.
-     */
-    public String get4Place() {
-        return currentGame.getPlayerList().get(2);
-    }
-    /**
-     * Getter of the first place player's score
-     * @return
-     *      The name of the first place player's score.
-     */
-    public String get1PlaceScore() {
-        return "100";
-    }
-    /**
-     * Getter of the second place player's score
-     * @return
-     *      The name of the second place player's score.
-     */
-    public String get2PlaceScore() {
-        return "90";
-    }
-    /**
-     * Getter of the third place player's score
-     * @return
-     *      The name of the third place player's score.
-     */
-    public String get3PlaceScore() {
-        return "80";
-    }
-    /**
-     * Getter of the fourth place player's score
-     * @return
-     *      The name of the fourth place player's score.
-     */
-    public String get4PlaceScore() {
-        return "70";
     }
 }
