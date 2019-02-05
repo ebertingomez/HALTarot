@@ -118,7 +118,8 @@ int Dijkstra::non_teste() const
 }
 
 #define REMPLIR_TOTO(indice) while ( angle[sommt] == indice) { toto.push_back(lignes[sommt]); sommt = pater[sommt]; teste[sommt] = true; }
-#define ALERTE_COTE_VIDE if ( toto.size() == 0 ) { ofstream log (chemin_absolu + "log.txt");log << "ERREUR : l'un des côtés de la carte est vide" << endl; log.close(); return; }
+#define ALERTE_COTE_VIDE if ( toto.size() == 0 ) { ofstream log (chemin_absolu + "log.txt");log << "ERREUR : l'un des côtés de la carte est vide" << endl; log.close(); return; } // TODO: To remove
+
 
 void Dijkstra::reconstituer_chemin()									// vérifie la vraisemblance d'un contour.
 {
@@ -168,8 +169,9 @@ void Dijkstra::reconstituer_chemin()									// vérifie la vraisemblance d'un c
 	log << "aire : " << AIRE(points[0],points[1],points[2],points[3])	<< " - " << points[0].x << "," << points[0].y
 																		<< " - " << points[1].x << "," << points[1].y
 																		<< " - " << points[2].x << "," << points[2].y
-																		<< " - " << points[3].x << "," << points[3].y << "    ";
-	#endif
+																		<< " - " << points[3].x << "," << points[3].y << "    ";// TODO: To remove
+
+#endif
 
 	/*
 	 * vérification de la vraisemblance de ce rectangle, en effectuant les testes suivants :
@@ -188,18 +190,18 @@ void Dijkstra::reconstituer_chemin()									// vérifie la vraisemblance d'un c
 			points[3].x > image.cols + 50 or points[3].y > image.rows + 50)
 	{
 		#ifdef DEBUG_
-		log << "point invalide" << endl;
+		log << "point invalide" << endl;// TODO: To remove
         #endif
-		log.close();
+		log.close();// TODO: To remove
 		return;
 	}
 
 	if (AIRE(points[0],points[1],points[2],points[3]) * 50 < image.rows * image.cols)
 	{
 		#ifdef DEBUG_
-		log << "trop petite" << endl;
+		log << "trop petite" << endl;// TODO: To remove
         #endif
-		log.close();
+		log.close();// TODO: To remove
 		return;
 	}
 
@@ -210,24 +212,24 @@ void Dijkstra::reconstituer_chemin()									// vérifie la vraisemblance d'un c
 		(c =	DISTANCE(points[3], points[2]))	< 30 )
 	{
 		#ifdef DEBUG_
-		log << "côté trop petit" << endl;
+		log << "côté trop petit" << endl;// TODO: To remove
         #endif
-		log.close();
+		log.close();// TODO: To remove
 		return;
 	}
 
 	if (MIN4(a,b,c,d) * 70 < MAX4(a,b,c,d))
 	{
 		#ifdef DEBUG_
-		log << "proportions trop extrèmes" << endl;
+		log << "proportions trop extrèmes" << endl;// TODO: To remove
         #endif
-		log.close();
+		log.close();// TODO: To remove
 		return;
 	}
 
 	#ifdef DEBUG_
-	if (not homographie.ajouter(points)) log << "carte refusée par la classe Plage_carte" << endl;
-	else log << "OK" << endl;
+	if (not homographie.ajouter(points)) log << "carte refusée par la classe Plage_carte" << endl;// TODO: To remove
+	else log << "OK" << endl;// TODO: To remove
 	#endif
 
 	#ifndef DEBUG_
