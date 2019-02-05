@@ -20,15 +20,18 @@ extern float sous_echantillon_isolation;
 extern float sous_echantillon_reconnaissance;
 extern Mat image;
 
+extern string chemin_absolu;
+
 int main (int argc, char** argv)
 {
 	points = new Point2f[4];
 	mode_demi_image = false;
 
+	ofstream log (chemin_absolu + "log.txt");// TODO: delete
 	if ( string(argv[1]) == "touche")
 	{
 		imshow("lkjbé", Mat(5,5, CV_8U));
-		cout << waitKey(0) << endl;
+		log << waitKey(0) << endl;
 	}
 
 	chemin_carte = string(argv[2]);
@@ -36,7 +39,7 @@ int main (int argc, char** argv)
 	if ( string(argv[1]) == "cherche" )
 	{
 		paquet_carte = new Carte();
-		cout << "------------>  " << paquet_carte->analyse(argv[2]) << endl;
+		log << "------------>  " << paquet_carte->analyse(argv[2]) << endl;
 		delete paquet_carte;
 	}
 	else if ( string(argv[1]) == "table" )
@@ -59,5 +62,6 @@ int main (int argc, char** argv)
 	}
 
 	delete[] points;
+	log.close();
 	return 0;
 }

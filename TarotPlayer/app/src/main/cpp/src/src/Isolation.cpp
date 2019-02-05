@@ -1,6 +1,9 @@
 #include "Isolation.hpp"
 
 extern Point2f* points;
+
+extern string chemin_absolu; // TODO TO Remove
+
 Mat image;
 Plage_cartes homographie;
 
@@ -102,6 +105,8 @@ vector<Vec4f> isolation(string nom)					// recherche les segments dans une image
 {
 	static Ptr<LineSegmentDetector> algo = createLineSegmentDetector();
 
+	ofstream log (chemin_absolu + "log.txt");
+
 	Mat image_hsv;
 	image = imread(nom, 1);
 	if (mode_demi_image) image = image(Range(image.rows*3/5, image.rows),Range::all());
@@ -109,7 +114,8 @@ vector<Vec4f> isolation(string nom)					// recherche les segments dans une image
 
 	if ( image.empty())
 	{
-		cout << "ERREUR : image innaccessible" << endl;
+		log << "ERREUR : image innaccessible" << endl;
+		log.close();
 		exit(-1);
 	}
 

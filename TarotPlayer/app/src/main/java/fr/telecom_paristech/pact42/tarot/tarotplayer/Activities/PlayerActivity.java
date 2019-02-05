@@ -113,6 +113,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         createFile(Game.GAME_FILE_NAME);
         createFile(Game.BID_FILE_NAME);
         createFile(Game.CHIEN_FILE_NAME);
+        createFile(MainActivity.MAIN_PATH+"/log.txt");
 
         createFileFromAssets("arbre_couleur_carte");
         createFileFromAssets("arbre_type_carte");

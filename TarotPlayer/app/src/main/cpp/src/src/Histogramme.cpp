@@ -9,11 +9,13 @@
 using namespace std;
 using namespace cv;
 
+extern string chemin_absolu; // TODO: to remove
 Cache* Histogramme::cache = NULL;
 
 Histogramme::Histogramme(string const& fichier): code("--"), note_total(0), rapport_rouge(0)
 {
-    image = imread(fichier,1);
+	ofstream log (chemin_absolu + "log.txt");
+	image = imread(fichier,1);
     if (image.data)
     {
         cvtColor(image,image,CV_BGR2HSV);
@@ -23,19 +25,22 @@ Histogramme::Histogramme(string const& fichier): code("--"), note_total(0), rapp
     }
     else
     {
-        cout << "erreur de lecture du fichier " << fichier << endl;
+        log << "erreur de lecture du fichier " << fichier << endl;
         code[0] = '!';code[1] = '!';
     }
+    log.close();
 }
 
 Histogramme::Histogramme(Mat const image, string code): code(code), note_total(0), rapport_rouge(0), image(image)
 {
-    if (!image.data || image.channels() != 3)
+	ofstream log (chemin_absolu + "log.txt");
+	if (!image.data || image.channels() != 3)
     {
-        cout << "ERREUR : objet Histomgramme initialisé avec matrice non valide" << endl;
-        cout << "data : " << image.data << "   -------  channels : " << image.channels() << endl;
+		log << "ERREUR : objet Histomgramme initialisé avec matrice non valide" << endl;
+		log << "data : " << image.data << "   -------  channels : " << image.channels() << endl;
         code = "!!";
     }
+    log.close();
     note_total = image.cols*image.rows;
 }
 
@@ -159,6 +164,8 @@ Classification Histogramme::classification_couleur(Mat const& image, bool rouge,
 
 	Classification sortie = AUTRE;
 
+	ofstream log (chemin_absolu + "log.txt");
+
 	for ( int erjhj = 0 ; erjhj < contours.size() ; erjhj ++ )
 	{
 
@@ -190,7 +197,7 @@ Classification Histogramme::classification_couleur(Mat const& image, bool rouge,
 			int norm_carreau	= norm(MASQUE(cache->getCarreau()),		255 * miniature);
 
 			#ifdef DEBUG_
-			cout << "distance coeur : "		<< norm_coeur << "     -------------       distance carreau : "	<< norm_carreau << endl;
+			log << "distance coeur : "		<< norm_coeur << "     -------------       distance carreau : "	<< norm_carreau << endl;
 			#endif
 
 			flip(miniature, miniature, 0);
@@ -198,7 +205,7 @@ Classification Histogramme::classification_couleur(Mat const& image, bool rouge,
 			norm_coeur		= min( norm_coeur,	(int) norm(MASQUE(cache->getCoeur()),	255 * miniature));
 
 			#ifdef DEBUG_
-			cout << "distance coeur : "		<< norm_coeur << "     -------------       distance carreau : "	<< norm_carreau << endl;
+			log << "distance coeur : "		<< norm_coeur << "     -------------       distance carreau : "	<< norm_carreau << endl;
 			#endif
 
 			if ( norm_coeur < norm_carreau and norm_coeur	< plafond_ressemblance_couleur ) sortie = honneur ? HONNEUR_COEUR : PETIT_COEUR;
@@ -210,7 +217,7 @@ Classification Histogramme::classification_couleur(Mat const& image, bool rouge,
 			int norm_pissenlit	= norm(MASQUE(cache->getPissenlit()),	miniature);
 
 			#ifdef DEBUG_
-			cout << "distance pique : "		<< norm_pique <<  "     -------------       distance trèfle : "	<< norm_pissenlit << endl;
+			log << "distance pique : "		<< norm_pique <<  "     -------------       distance trèfle : "	<< norm_pissenlit << endl;
 			#endif
 
 			flip(miniature, miniature, 0);
@@ -220,7 +227,7 @@ Classification Histogramme::classification_couleur(Mat const& image, bool rouge,
 
 
 			#ifdef DEBUG_
-			cout << "distance pique : "		<< norm_pique <<  "     -------------       distance trèfle : "	<< norm_pissenlit << endl;
+			log << "distance pique : "		<< norm_pique <<  "     -------------       distance trèfle : "	<< norm_pissenlit << endl;
 			#endif
 
 			if ( norm_pique < norm_pissenlit and norm_pique		< plafond_ressemblance_couleur ) sortie = honneur ? HONNEUR_PIQUE : PETIT_PIQUE;
@@ -228,6 +235,7 @@ Classification Histogramme::classification_couleur(Mat const& image, bool rouge,
 		}
 		if (honneur) return sortie;
 	}
+	log.close();
 	return sortie;
 }
 
@@ -273,6 +281,8 @@ Classification Histogramme::classification_neuronale()
 	static const Ptr<Boost> arbre_type		= Boost::load("data/arbre_type_carte");
     static const Ptr<Boost> arbre_couleur	= Boost::load("data/arbre_couleur_carte");
 
+	ofstream log (chemin_absolu + "log.txt");
+
 	vector<float> entre(85);
 	vector<float> sortie(1);
 
@@ -299,9 +309,9 @@ Classification Histogramme::classification_neuronale()
 
 
 	for (int i = 0; i < 85; i++)
-		cout << entre[i] << "," ;
+		log << entre[i] << "," ;
 
-
+	log.close(); //TODO: delete
 	arbre_type->predict(entre, sortie);
 	if ( sortie[0] == -1 )
 	{

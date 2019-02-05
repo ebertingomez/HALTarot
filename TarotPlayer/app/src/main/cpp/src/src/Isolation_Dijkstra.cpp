@@ -15,6 +15,8 @@ extern Plage_cartes homographie;
 extern Point2f* points;
 extern Mat image;
 
+extern string chemin_absolu; // TODO: To remove
+
 float Dijkstra::note(int i, int j, bool& origin, bool& orth, bool raccordement) const					// distance entre deux segments
 {
 	float longueur_i = sqrt(DISTANCE(Point2f(lignes[i][0], lignes[i][1]), Point2f(lignes[i][2], lignes[i][3])));
@@ -116,13 +118,15 @@ int Dijkstra::non_teste() const
 }
 
 #define REMPLIR_TOTO(indice) while ( angle[sommt] == indice) { toto.push_back(lignes[sommt]); sommt = pater[sommt]; teste[sommt] = true; }
-#define ALERTE_COTE_VIDE if ( toto.size() == 0 ) { cout << "ERREUR : l'un des côtés de la carte est vide" << endl; return; }
+#define ALERTE_COTE_VIDE if ( toto.size() == 0 ) { ofstream log (chemin_absolu + "log.txt");log << "ERREUR : l'un des côtés de la carte est vide" << endl; log.close(); return; }
 
 void Dijkstra::reconstituer_chemin()									// vérifie la vraisemblance d'un contour.
 {
 	int sommt = pater[init];
 	vector<Vec4i> toto;
 	pair<float,float> droites[4];
+
+	ofstream log (chemin_absolu + "log.txt"); // TODO: to remove
 
 	/*
 	 * Les quatres côtés de la cartes sont estimées par des droites, obtenues par régression linéaire
@@ -161,7 +165,7 @@ void Dijkstra::reconstituer_chemin()									// vérifie la vraisemblance d'un c
 	points[3] = intersection_droites(droites[0], droites[3]);
 
 	#ifdef DEBUG_
-	cout << "aire : " << AIRE(points[0],points[1],points[2],points[3])	<< " - " << points[0].x << "," << points[0].y
+	log << "aire : " << AIRE(points[0],points[1],points[2],points[3])	<< " - " << points[0].x << "," << points[0].y
 																		<< " - " << points[1].x << "," << points[1].y
 																		<< " - " << points[2].x << "," << points[2].y
 																		<< " - " << points[3].x << "," << points[3].y << "    ";
@@ -184,16 +188,18 @@ void Dijkstra::reconstituer_chemin()									// vérifie la vraisemblance d'un c
 			points[3].x > image.cols + 50 or points[3].y > image.rows + 50)
 	{
 		#ifdef DEBUG_
-		cout << "point invalide" << endl;
-		#endif
+		log << "point invalide" << endl;
+        #endif
+		log.close();
 		return;
 	}
 
 	if (AIRE(points[0],points[1],points[2],points[3]) * 50 < image.rows * image.cols)
 	{
 		#ifdef DEBUG_
-		cout << "trop petite" << endl;
-		#endif
+		log << "trop petite" << endl;
+        #endif
+		log.close();
 		return;
 	}
 
@@ -204,27 +210,30 @@ void Dijkstra::reconstituer_chemin()									// vérifie la vraisemblance d'un c
 		(c =	DISTANCE(points[3], points[2]))	< 30 )
 	{
 		#ifdef DEBUG_
-		cout << "côté trop petit" << endl;
-		#endif
+		log << "côté trop petit" << endl;
+        #endif
+		log.close();
 		return;
 	}
 
 	if (MIN4(a,b,c,d) * 70 < MAX4(a,b,c,d))
 	{
 		#ifdef DEBUG_
-		cout << "proportions trop extrèmes" << endl;
-		#endif
+		log << "proportions trop extrèmes" << endl;
+        #endif
+		log.close();
 		return;
 	}
 
 	#ifdef DEBUG_
-	if (not homographie.ajouter(points)) cout << "carte refusée par la classe Plage_carte" << endl;
-	else cout << "OK" << endl;
+	if (not homographie.ajouter(points)) log << "carte refusée par la classe Plage_carte" << endl;
+	else log << "OK" << endl;
 	#endif
 
 	#ifndef DEBUG_
 	homographie.ajouter(points)
-	#endif
+    #endif
+	log.close();
 }
 
 extern int taille_minimale_segment;

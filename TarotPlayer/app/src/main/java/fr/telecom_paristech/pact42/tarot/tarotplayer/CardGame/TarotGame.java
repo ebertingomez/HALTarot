@@ -60,10 +60,10 @@ public class TarotGame implements GameInterface, Parcelable {
      * application flow.
      */
     public TarotGame() {
-        this.playerList = new ArrayList<String>();
-        this.cardList = new ArrayList<TarotCard>();
-        this.chienList = new ArrayList<TarotCard>();
-        this.lastPlayedCards = new LinkedList<TarotCard>();
+        this.playerList = new ArrayList<>();
+        this.cardList = new ArrayList<>();
+        this.chienList = new ArrayList<>();
+        lastPlayedCards = new LinkedList<>();
         this.difficulty = null;
     }
 
@@ -75,13 +75,13 @@ public class TarotGame implements GameInterface, Parcelable {
      */
     protected TarotGame(Parcel in) {
         difficulty = in.readString();
-        this.playerList = new ArrayList<String>();
+        this.playerList = new ArrayList<>();
         playerList = in.createStringArrayList();
-        cardList = new ArrayList<TarotCard>();
+        cardList = new ArrayList<>();
         in.readTypedList(cardList, TarotCard.CREATOR);
-        chienList = new ArrayList<TarotCard>();
+        chienList = new ArrayList<>();
         in.readTypedList(chienList, TarotCard.CREATOR);
-        lastPlayedCards = new LinkedList<TarotCard>();
+        lastPlayedCards = new LinkedList<>();
         in.readTypedList(lastPlayedCards, TarotCard.CREATOR);
     }
     /**
@@ -133,7 +133,9 @@ public class TarotGame implements GameInterface, Parcelable {
             Log.e("WritingFile", "The file could not be written: " + e.getLocalizedMessage());
         } finally {
             try {
-                bw.close();
+                if (bw != null) {
+                    bw.close();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -160,6 +162,7 @@ public class TarotGame implements GameInterface, Parcelable {
             Log.e("WritingFile", "The file could not be written: " + e.getLocalizedMessage());
         } finally {
             try {
+                assert bw != null;
                 bw.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -193,6 +196,7 @@ public class TarotGame implements GameInterface, Parcelable {
             Log.e("WritingFile", "The file could not be written: " + e.getLocalizedMessage());
         } finally {
             try {
+                assert bw != null;
                 bw.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -376,16 +380,6 @@ public class TarotGame implements GameInterface, Parcelable {
             }
         }
         return 0;
-    }
-
-    /**
-     * Getter of the list of players
-     * @return
-     *      An arrays containing the list of players
-     *     @see #playerList
-     */
-    public ArrayList<String> getPlayerList() {
-        return playerList;
     }
 
     /**

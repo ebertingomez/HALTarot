@@ -36,7 +36,9 @@ string Carte::analyse(string const& nom_fichier)
 
 	if ( image.getCode() == "!!" )
 	{
-		cout << "ERREUR : " << chemin_absolu << "image.png" << " inaccessible" << endl;
+		ofstream log (chemin_absolu + "log.txt");
+		log << "ERREUR : " << chemin_absolu << "image.png" << " inaccessible" << endl;
+		log.close();
 		return "!!";
 	}
 
@@ -65,17 +67,17 @@ string Carte::analyse(Algorithme_surf& image)							// reconnaissance d'une cart
 	Classification couleur = image.classification_carte(&hauteur_carte);
 
 	hauteur_carte %= 10;
-
+	ofstream log (chemin_absolu + "log.txt");
 	switch (couleur)
 	{
 
 	case RIEN:
-		cout << "carte illisible" << endl;
+		log << "carte illisible" << endl;
 		return "!!";
 
 	case PETITE_NOIRE:
 	case PETITE_ROUGE:
-		cout << "couleur illisible !" << endl;
+		log << "couleur illisible !" << endl;
 		return "!!";
 	case PETIT_CARREAU:
 		ss << hauteur_carte << "A";
@@ -91,7 +93,7 @@ string Carte::analyse(Algorithme_surf& image)							// reconnaissance d'une cart
 		break;
 	case AUTRE:
 
-		cout << "C'est un atout ou un honneur." << endl;
+		log << "C'est un atout ou un honneur." << endl;
 
 		/*
 		 * On veut maintenant affiner la classification, pour distinguer les atouts des honneurs.
@@ -109,7 +111,8 @@ string Carte::analyse(Algorithme_surf& image)							// reconnaissance d'une cart
 
 		couleur = morceau.classification_carte();
 
-		cout << "C'est un " << transcription_francais(couleur) << endl;
+		log << "C'est un " << transcription_francais(couleur) << endl;
+
 
 		image.calcul_descripteurs();
 		string retour = analyse_SURF(image, couleur);						// recherche de matching SURF.
@@ -127,7 +130,7 @@ string Carte::analyse(Algorithme_surf& image)							// reconnaissance d'une cart
 		}
 		else return retour;
 	}
-
+	log.close();
 	return ss.str();
 }
 
@@ -144,6 +147,7 @@ string Carte::analyse_SURF(Algorithme_surf banane, Classification couleur)
 {
 	long tri[78];
 	vector<DMatch>* liste_match;
+	ofstream log (chemin_absolu + "log.txt");
     for ( char i = 0 ; i < paquet.size() ; i ++ )					// compare l'histogramme en teinte de l'image avec celui des cartes préenregistrées pertinentes.
     {
         tri[i] = -1;
@@ -181,7 +185,7 @@ string Carte::analyse_SURF(Algorithme_surf banane, Classification couleur)
 
         if ( tri[minimum] == -1 ) break;
 
-        cout << paquet[minimum]->getCode() << " : " << tri[minimum] << endl;
+        log << paquet[minimum]->getCode() << " : " << tri[minimum] << endl;
 
 		liste_match = paquet[minimum]->comparer(banane);				// matching
 		if ( banane.investigation(*paquet[minimum], *liste_match) )
@@ -193,6 +197,7 @@ string Carte::analyse_SURF(Algorithme_surf banane, Classification couleur)
         tri[minimum] = -1;
     }
     delete liste_match;
+	log.close();
     return "--";
 }
 

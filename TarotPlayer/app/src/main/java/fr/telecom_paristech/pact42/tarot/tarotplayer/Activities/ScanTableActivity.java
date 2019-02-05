@@ -54,7 +54,6 @@ public class ScanTableActivity extends AppCompatActivity {
      */
     @Override
     protected void onResume() {
-
         super.onResume();
         TableLayout cardsArray = findViewById(R.id.cardsArrayHand);
         currentGame.printLastCards(cardsArray, this);

@@ -5,4 +5,4 @@
  * @see fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TarotCard
  * @see fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame.TarotGame
  */
-package fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame;;
+package fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame;

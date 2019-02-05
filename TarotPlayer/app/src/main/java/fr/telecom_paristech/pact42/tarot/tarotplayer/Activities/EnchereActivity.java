@@ -161,17 +161,17 @@ public class EnchereActivity extends AppCompatActivity implements View.OnClickLi
     public void setEnchere(String enchere, Drawable image) {
         switch (actualPlayer) {
         case R.id.enchere1:
-            EnchereActivity.player1Enchere = enchere;
+            player1Enchere = enchere;
             ImageView enchere1 = findViewById(R.id.enchere1);
             enchere1.setImageDrawable(image);
             break;
         case R.id.enchere2:
-            EnchereActivity.player2Enchere = enchere;
+            player2Enchere = enchere;
             ImageView enchere2 = findViewById(R.id.enchere2);
             enchere2.setImageDrawable(image);
             break;
         case R.id.enchere3:
-            EnchereActivity.player3Enchere = enchere;
+            player3Enchere = enchere;
             ImageView enchere3 = findViewById(R.id.enchere3);
             enchere3.setImageDrawable(image);
             break;

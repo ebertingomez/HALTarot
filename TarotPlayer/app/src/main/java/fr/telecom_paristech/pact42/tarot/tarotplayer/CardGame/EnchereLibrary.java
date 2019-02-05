@@ -17,11 +17,11 @@ public final class EnchereLibrary {
      */
     public final static Hashtable<String, Integer> enchereTable = new Hashtable<String, Integer>();
     static {
-        enchereTable.put("CO", Integer.valueOf(R.drawable.enchere_set2));
-        enchereTable.put("SC", Integer.valueOf(R.drawable.enchere_set3));
-        enchereTable.put("GA", Integer.valueOf(R.drawable.enchere_set4));
-        enchereTable.put("PE", Integer.valueOf(R.drawable.enchere_set5));
-        enchereTable.put("PA", Integer.valueOf(R.drawable.enchere_set6));
+        enchereTable.put("CO", R.drawable.enchere_set2);
+        enchereTable.put("SC", R.drawable.enchere_set3);
+        enchereTable.put("GA", R.drawable.enchere_set4);
+        enchereTable.put("PE", R.drawable.enchere_set5);
+        enchereTable.put("PA", R.drawable.enchere_set6);
     }
 
     /**
@@ -29,11 +29,11 @@ public final class EnchereLibrary {
      */
     public final static Hashtable<String, Integer> enchereTableValue = new Hashtable<String, Integer>();
     static {
-        enchereTableValue.put("Chelem", Integer.valueOf(6));
-        enchereTableValue.put("CO", Integer.valueOf(5));
-        enchereTableValue.put("SC", Integer.valueOf(4));
-        enchereTableValue.put("GA", Integer.valueOf(3));
-        enchereTableValue.put("PE", Integer.valueOf(2));
-        enchereTableValue.put("PA", Integer.valueOf(1));
+        enchereTableValue.put("Chelem", 6);
+        enchereTableValue.put("CO", 5);
+        enchereTableValue.put("SC", 4);
+        enchereTableValue.put("GA", 3);
+        enchereTableValue.put("PE", 2);
+        enchereTableValue.put("PA", 1);
     }
 }

@@ -4,16 +4,13 @@
 
 package fr.telecom_paristech.pact42.tarot.tarotplayer.CardGame;
 
-import android.content.res.AssetManager;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.Log;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import fr.telecom_paristech.pact42.tarot.tarotplayer.Activities.MainActivity;
 import fr.telecom_paristech.pact42.tarot.tarotplayer.Divers.PhotoDegueuException;
@@ -24,10 +21,7 @@ import fr.telecom_paristech.pact42.tarot.tarotplayer.Divers.PhotoDegueuException
  *  @see android.hardware.Camera
  */
 public class CardAcquisition {
-    private static int tempcounter = 1;
-    /**
-     * Loading the native Library on C++ to use openCV
-     */
+    private static int tempcounter = 0;//todo to remove
     static {
         System.loadLibrary("native-lib");
     }
@@ -152,8 +146,19 @@ public class CardAcquisition {
      *      THe valeur of the card
      */
     private static String analyse(String path) {
-        return analyzeFromJNI(path);
-        //return Integer.toString(tempcounter++)+"P";
+        //return analyzeFromJNI(path);
+        String color;
+        if (tempcounter>39) tempcounter=0;
+        switch (tempcounter/10){
+            case 0: color="A";break;
+            case 1: color="O";break;
+            case 2: color="P";break;
+            case 3: color="T";break;
+            default: color="A";
+        }
+
+
+        return Integer.toString(tempcounter++%10)+color;
     }
 
     /**

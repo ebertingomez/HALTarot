@@ -22,21 +22,26 @@ Cache::Cache(bool modif):modif(modif), fichier_couleur(0)
 
 bool Cache::verification_acces()
 {
+	ofstream log (chemin_absolu + "log.txt");
 	if ( ! fichier_carac )
     {
-        cout << "ERREUR : impossible d'ouvrir le fichier contenant les descripteurs" << endl;
+        log << "ERREUR : impossible d'ouvrir le fichier contenant les descripteurs" << endl;
+        log.close();
         return false;
     }
     if ( ! fichier_desc )
     {
-        cout << "ERREUR : impossible d'ouvrir le fichier contenant les points caractéristiques" << endl;
+        log << "ERREUR : impossible d'ouvrir le fichier contenant les points caractéristiques" << endl;
+		log.close();
         return false;
     }
 	if ( ! fichier_liste )
     {
-        cout << "ERREUR : impossible d'ouvrir le fichier contenant la liste des images disponibles" << endl;
+        log << "ERREUR : impossible d'ouvrir le fichier contenant la liste des images disponibles" << endl;
+		log.close();
         return false;
     }
+	log.close();
     return true;
 }
 

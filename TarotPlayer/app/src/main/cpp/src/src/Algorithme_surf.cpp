@@ -103,8 +103,10 @@ bool Algorithme_surf::investigation(Algorithme_surf echantillon, vector<DMatch> 
 	perspectiveTransform( obj_corners, scene, homo);
 
 	#ifdef DEBUG_HOMOGRAPHIE
-	cout << endl << "cadre :      ( cols = " << cols << " - rows : " << rows << " )" << endl;
-	for ( int w = 0 ; w < 4 ; w ++ ) cout << scene[w].x << " - " << scene[w].y << endl;
+	ofstream log (chemin_absolu + "log.txt");
+	log << endl << "cadre :      ( cols = " << cols << " - rows : " << rows << " )" << endl;
+	for ( int w = 0 ; w < 4 ; w ++ ) log << scene[w].x << " - " << scene[w].y << endl;
+	log.close();
 	#endif
 
 	return vraisemblance_rectangle(scene.data(), rows, cols);
